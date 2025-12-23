@@ -1,46 +1,46 @@
 # web_mining_ucl_2025
-NLP &amp; Durabilité : Mesure de la distance sémantique entre promesse client et reporting corporate.
+NLP & Sustainability: Measuring the Semantic Gap between Marketing Claims and ESG Reporting.
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![Status](https://img.shields.io/badge/Status-In_Progress-yellow)
 ![Course](https://img.shields.io/badge/Course-Web_Mining-orange)
 
-## Contexte et Objectifs
+## 📖 Context and Objectives
 
-Ce projet s'inscrit dans le cadre du cours de **Web Mining (MLSMM2153)**. En tant que consultants, notre mission est d'auditer la stratégie de communication des boutiques en ligne "engagées".
+This project is carried out as part of the **Web Mining (MLSMM2153)** course. As consultants, our mission is to audit the communication strategy of "committed" online stores.
 
-**Sujet 6 : Étude de la mise en avant des produits durables.**
+**Subject 6: Study of the promotion of sustainable products.**
 
-L'objectif est de confronter le vocabulaire marketing utilisé sur les fiches produits avec la réalité des engagements (ESG/RSE) via une approche "Data-Driven".
+The objective is to confront the marketing vocabulary used on product pages with the reality of the company's commitments (ESG/CSR) using a "Data-Driven" approach.
 
-### Questions clés
-1. Comment les marques éthiques valorisent-elles sémantiquement leurs produits ?
-2. Existe-t-il une cohérence entre les catégories de produits et les promesses durables (Link Analysis) ?
-3. Le discours marketing est-il aligné avec les rapports de durabilité ?
+### Key Questions
+1. How do ethical brands semantically value their products?
+2. Is there consistency between product categories and sustainable promises (Link Analysis)?
+3. Is the marketing discourse aligned with sustainability reports?
 
 ---
 
-## Architecture du Projet
+## ⚙️ Project Architecture
 
-Le projet suit un pipeline de données strict en trois étapes :
+The project follows a strict three-step data pipeline:
 
-### 1. Collecte de Données (Scraping)
-* **Cibles :** Sites e-commerce durables et institutionnels.
-* **Méthode :** Navigation automatisée et parsing HTML.
-* **Stratégie :** Points d'entrées ciblés pour éviter le bruit et garantir un corpus représentatif.
-* **Output :** Données structurées (JSON/CSV).
+### 1. Data Collection (Scraping)
+* **Targets:** Sustainable e-commerce sites and institutional websites.
+* **Method:** Automated navigation and HTML parsing.
+* **Strategy:** Targeted entry points to avoid noise and ensure a representative corpus.
+* **Output:** Structured data (JSON/CSV).
 
 ### 2. Text Mining (NLP)
-Transformation du corpus brut en insights sémantiques.
-* **Preprocessing :** Tokenisation, filtrage (Stopwords), Lemmatisation/Stemming.
-* **Vectorisation :** TF-IDF / Doc2Vec.
-* **Analyses :**
-    * *Descriptive :* Nuages de mots, n-grams.
-    * *Sémantique :* Analyse de sentiments/tonalité.
-    * *Clustering :* Groupement non supervisé des descriptions produits.
+Transforming the raw corpus into semantic insights.
+* **Preprocessing:** Tokenization, Filtering (Stopwords), Lemmatization/Stemming.
+* **Vectorization:** TF-IDF / Doc2Vec.
+* **Analyses:**
+    * *Descriptive:* Word clouds, n-grams.
+    * *Semantic:* Sentiment analysis/tonality.
+    * *Clustering:* Unsupervised grouping of product descriptions.
 
-### 3. Link Analysis (Graphes)
-Modélisation des relations entre produits et catégories.
-* **Construction du graphe :** Nœuds (Produits/Catégories) et Arêtes (Liens de similarité ou navigation).
-* **Métriques :** Degree Centrality, PageRank, Betweenness.
-* **Objectif :** Identifier les produits "ponts" et la structure de l'offre durable.
+### 3. Link Analysis (Graph Theory)
+Modeling relationships between products and categories.
+* **Graph Construction:** Nodes (Products/Categories) and Edges (Similarity links or navigation).
+* **Metrics:** Degree Centrality, PageRank, Betweenness.
+* **Objective:** Identify "bridge" products and the structure of the sustainable offer.
