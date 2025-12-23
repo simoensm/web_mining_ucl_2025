@@ -2,7 +2,7 @@
 NLP &amp; Durabilité : Mesure de la distance sémantique entre promesse client et reporting corporate.
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
-![Status](https://img.shields.io/badge/Status-Completed-success)
+![Status](https://img.shields.io/badge/Status-In_Progress-yellow)
 ![Course](https://img.shields.io/badge/Course-Web_Mining-orange)
 
 ## 📖 Contexte et Objectifs
@@ -44,23 +44,3 @@ Modélisation des relations entre produits et catégories.
 * **Construction du graphe :** Nœuds (Produits/Catégories) et Arêtes (Liens de similarité ou navigation).
 * **Métriques :** Degree Centrality, PageRank, Betweenness.
 * **Objectif :** Identifier les produits "ponts" et la structure de l'offre durable.
-
----
-
-## 📂 Structure du Répertoire
-
-```bash
-├── data/
-│   ├── raw/            # Données brutes issues du scraping (HTML, JSON brut)
-│   └── processed/      # Données nettoyées et prêtes pour l'analyse (CSV, Graphes)
-├── notebooks/          # Notebooks Jupyter d'exploration et de visualisation
-│   ├── 1_scraping.ipynb
-│   ├── 2_text_mining.ipynb
-│   └── 3_link_analysis.ipynb
-├── src/                # Scripts Python réutilisables
-│   ├── scraper.py      # Script de collecte
-│   ├── preprocessing.py # Fonctions de nettoyage NLP
-│   └── utils.py
-├── reports/            # Graphes générés et rapport PDF final
-├── requirements.txt    # Dépendances du projet
-└── README.md           # Documentation du projet
