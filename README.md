@@ -5,7 +5,7 @@ NLP &amp; Durabilité : Mesure de la distance sémantique entre promesse client 
 ![Status](https://img.shields.io/badge/Status-In_Progress-yellow)
 ![Course](https://img.shields.io/badge/Course-Web_Mining-orange)
 
-## 📖 Contexte et Objectifs
+## Contexte et Objectifs
 
 Ce projet s'inscrit dans le cadre du cours de **Web Mining (MLSMM2153)**. En tant que consultants, notre mission est d'auditer la stratégie de communication des boutiques en ligne "engagées".
 
@@ -20,7 +20,7 @@ L'objectif est de confronter le vocabulaire marketing utilisé sur les fiches pr
 
 ---
 
-## ⚙️ Architecture du Projet
+## Architecture du Projet
 
 Le projet suit un pipeline de données strict en trois étapes :
 
