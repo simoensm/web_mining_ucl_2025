@@ -61,6 +61,7 @@ https://eu.patagonia.com/gb/en/product/mens-alpine-guide-pants-short/83210.html
 https://eu.patagonia.com/gb/en/product/mens-altvia-alpine-pants/82960.html
 https://eu.patagonia.com/gb/en/product/mens-altvia-trail-pants-regular/21170.html
 https://eu.patagonia.com/gb/en/product/mens-altvia-trail-pants-short/21165.html
+https://eu.patagonia.com/gb/en/product/mens-altvia-trail-shorts-10-inch/57185.html
 https://eu.patagonia.com/gb/en/product/mens-back-step-shirt/53139.html
 https://eu.patagonia.com/gb/en/product/mens-baggies-lights-6-inch-shorts/58049.html
 https://eu.patagonia.com/gb/en/product/mens-baggies-longs-7-inch-shorts/58035.html
@@ -117,7 +118,6 @@ https://eu.patagonia.com/gb/en/product/mens-fitz-roy-icon-responsibili-tee/37838
 https://eu.patagonia.com/gb/en/product/mens-fjord-cotton-flannel-shirt/42401.html
 https://eu.patagonia.com/gb/en/product/mens-fjord-loft-thick-flannel-shirt/42440.html
 https://eu.patagonia.com/gb/en/product/mens-fleece-pile-lined-fjord-loft-shirt-jacket/20365.html
-https://eu.patagonia.com/gb/en/product/mens-fleece-pile-lined-trucker-jacket/26520.html
 https://eu.patagonia.com/gb/en/product/mens-flying-fish-responsibili-tee/37598.html
 https://eu.patagonia.com/gb/en/product/mens-funhoggers-cotton-shorts-6-inch/57145.html
 https://eu.patagonia.com/gb/en/product/mens-go-to-shirt/52691.html
@@ -149,7 +149,6 @@ https://eu.patagonia.com/gb/en/product/mens-iron-forge-fleece-lined-5-pocket-wor
 https://eu.patagonia.com/gb/en/product/mens-iron-forge-fleece-lined-5-pocket-work-pants-short/55905.html
 https://eu.patagonia.com/gb/en/product/mens-iron-forge-hemp-canvas-bib-overalls-regular/55050.html
 https://eu.patagonia.com/gb/en/product/mens-iron-forge-hemp-canvas-bib-overalls-short/55040.html
-https://eu.patagonia.com/gb/en/product/mens-iron-forge-hemp-canvas-chore-coat/27825.html
 https://eu.patagonia.com/gb/en/product/mens-iron-forge-hemp-canvas-double-knee-work-pants-short/55291.html
 https://eu.patagonia.com/gb/en/product/mens-iron-forge-hemp-canvas-insulated-overalls-regular/55765.html
 https://eu.patagonia.com/gb/en/product/mens-isthmus-insulated-deck-jacket/27025.html
@@ -252,6 +251,7 @@ https://eu.patagonia.com/gb/en/product/mens-r1-fleece-midlayer-vest/40145.html
 https://eu.patagonia.com/gb/en/product/mens-r1-fleece-pants/82157.html
 https://eu.patagonia.com/gb/en/product/mens-r1-lite-yulex-short-john-wetsuit/88540.html
 https://eu.patagonia.com/gb/en/product/mens-r1-techface-fitz-roy-trout-hoody/81786.html
+https://eu.patagonia.com/gb/en/product/mens-r1-techface-midlayer-fleece-hoody/83578.html
 https://eu.patagonia.com/gb/en/product/mens-r1-techface-midlayer-fleece-jacket/83581.html
 https://eu.patagonia.com/gb/en/product/mens-r1-thermal-fleece-bottoms/40620.html
 https://eu.patagonia.com/gb/en/product/mens-r1-thermal-fleece-full-zip-hoody/40600.html

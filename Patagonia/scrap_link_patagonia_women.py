@@ -2,7 +2,6 @@ import asyncio
 from playwright.async_api import async_playwright
 
 async def harvest_womens_links():
-    # UPDATED: URL specific to Women
     url = "https://eu.patagonia.com/gb/en/shop/womens"
     
     async with async_playwright() as p:
@@ -12,26 +11,22 @@ async def harvest_womens_links():
         
         print(f"--- Navigate to {url} ---")
         await page.goto(url, timeout=60000, wait_until="domcontentloaded")
-        
-        # 1. Close Cookie Banner
+      
         try:
             await page.click('#onetrust-accept-btn-handler', timeout=3000)
             print("  > Closed Cookie Banner")
         except:
             print("  > No cookie banner found")
 
-        # 2. Scroll and Load All Products
         print("--- Starting Scroll & Load Process ---")
         
         previous_count = 0
         retries = 0
         
         while True:
-            # Scroll to bottom
             await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             await asyncio.sleep(2)
             
-            # Click "Load More" if exists
             load_more = page.locator("button.load-more, .search-results-footer button")
             if await load_more.count() > 0 and await load_more.first.is_visible():
                 try:
@@ -41,7 +36,6 @@ async def harvest_womens_links():
                 except:
                     pass
             
-            # Check if new products appeared
             current_count = await page.locator('.product-tile__wrapper').count()
             
             if current_count > previous_count:
@@ -56,7 +50,6 @@ async def harvest_womens_links():
                 print("--- Reached end of page ---")
                 break
 
-        # 3. Extract and CLEAN Links
         print("--- Extracting and Cleaning Links ---")
         
         raw_links = await page.eval_on_selector_all(
@@ -64,7 +57,6 @@ async def harvest_womens_links():
             "elements => elements.map(e => e.href)"
         )
         
-        # Remove duplicates and query parameters (colors)
         unique_clean_links = set()
         
         for link in raw_links:
@@ -75,7 +67,6 @@ async def harvest_womens_links():
         
         print(f"\nFOUND {len(final_list)} UNIQUE PRODUCTS (Colors merged).")
         
-        # 4. Save to file
         output_file = "womens_product_links.txt"
         with open(output_file, "w") as f:
             for link in final_list:

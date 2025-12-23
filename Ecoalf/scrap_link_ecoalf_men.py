@@ -11,10 +11,8 @@ class EcoalfCollector:
     async def close_cookie_banner(self, page):
         print("  > Handling Cookie Banner...")
         try:
-            # Wait for banner to potentially appear
             await asyncio.sleep(2)
-            
-            # Common OneTrust button ID or generic 'Accept' text
+          
             cookie_btn = page.locator('#onetrust-accept-btn-handler, button:has-text("Accept"), button:has-text("Allow")')
             if await cookie_btn.count() > 0 and await cookie_btn.first.is_visible():
                 await cookie_btn.first.click()
@@ -29,12 +27,10 @@ class EcoalfCollector:
         Target based on user input: <a href="/en/products/..." class="card-product__color ...">
         We look for ANY <a> tag that contains '/products/' to be safe.
         """
-        # Check if any matching links exist
         count = await page.locator('a[href*="/products/"]').count()
         if count == 0:
             return []
 
-        # Extract data
         return await page.evaluate("""
             () => {
                 // Select all anchors with '/products/' in the href
@@ -53,7 +49,6 @@ class EcoalfCollector:
 
     async def run(self):
         async with async_playwright() as p:
-            # Launch with headless=False to see the browser
             browser = await p.chromium.launch(headless=False) 
             context = await browser.new_context()
             page = await context.new_page()
@@ -65,7 +60,6 @@ class EcoalfCollector:
 
             print("--- Waiting for product links ---")
             try:
-                # UPDATED: Wait for the specific link pattern you found
                 await page.wait_for_selector('a[href*="/products/"]', timeout=30000)
                 print("  > Product grid loaded successfully.")
                 
@@ -78,11 +72,9 @@ class EcoalfCollector:
             no_new_products_attempts = 0
             
             while True:
-                # 1. Scroll to the bottom to trigger lazy loading
                 await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                await asyncio.sleep(2) # Give it time to render
+                await asyncio.sleep(2)
 
-                # 2. Extract
                 current_batch = await self.extract_products(page)
                 
                 new_styles_found = 0
@@ -91,8 +83,7 @@ class EcoalfCollector:
                         self.seen_slugs.add(item['style_id'])
                         self.final_links.append(item['url'])
                         new_styles_found += 1
-                
-                # 3. Status Report
+
                 if new_styles_found > 0:
                     print(f"  > +{new_styles_found} NEW Styles found. (Total: {len(self.final_links)})")
                     no_new_products_attempts = 0
@@ -100,14 +91,11 @@ class EcoalfCollector:
                     no_new_products_attempts += 1
                     print(f"  > No new styles. Attempt {no_new_products_attempts}/5")
 
-                # 4. Stop if we haven't found anything new in 5 attempts
                 if no_new_products_attempts >= 5:
                     print("--- Finished: No new styles found. ---")
                     break
 
-                # 5. Click 'View More' if it exists (Generic check)
                 try:
-                    # Looks for button or link with text 'View More' or 'Load More'
                     load_more = page.locator('text=/View More|Load More/i')
                     if await load_more.count() > 0 and await load_more.first.is_visible():
                          print("  > Clicking 'View More'...")
