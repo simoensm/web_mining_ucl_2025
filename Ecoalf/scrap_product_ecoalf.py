@@ -4,7 +4,7 @@ from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 
 class EcoalfProductScraper:
-    def __init__(self, input_file="ecoalf_men_links.txt", output_file="ecoalf_men_final.xlsx"):
+    def __init__(self, input_file="ecoalf_women_links.txt", output_file="ecoalf_women_final.xlsx"):
         self.input_file = input_file
         self.output_file = output_file
         self.data = []
@@ -124,5 +124,5 @@ class EcoalfProductScraper:
 
 if __name__ == "__main__":
     # Ensure these filenames match your needs (Men vs Women)
-    scraper = EcoalfProductScraper(input_file="ecoalf_men_links.txt", output_file="ecoalf_men_final.xlsx")
+    scraper = EcoalfProductScraper(input_file="ecoalf_women_links.txt", output_file="ecoalf_women_final.xlsx")
     asyncio.run(scraper.run())

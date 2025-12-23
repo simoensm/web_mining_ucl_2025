@@ -6,7 +6,6 @@ class ArmedAngelsProCollector:
         self.start_url = start_url
         self.output_file = output_file
         
-        # Stores the Style IDs we have already processed (e.g., "30001234")
         self.seen_style_ids = set()
         self.final_links = []
 
@@ -61,7 +60,7 @@ class ArmedAngelsProCollector:
             no_new_products_attempts = 0
             
             while True:
-                # 1. Grab visible products
+        
                 current_batch = await self.extract_products(page)
                 
                 new_styles_found = 0
@@ -71,26 +70,24 @@ class ArmedAngelsProCollector:
                     url = item['url']
                     handle = item['handle']
                     
-                    # --- DEDUPLICATION LOGIC ---
                     if style_id != 'UNKNOWN':
                         if style_id not in self.seen_style_ids:
-                            # FIRST TIME seeing this style -> KEEP IT
+                           
                             self.seen_style_ids.add(style_id)
                             self.final_links.append(url)
                             new_styles_found += 1
-                            # Optional: Print to verify logic is working
-                            # print(f"    [KEEP] {handle} (ID: {style_id})")
+                            
                         else:
-                            # ALREADY SEEN this style -> SKIP IT
+                            
                             pass
-                            # print(f"    [SKIP] {handle} (Duplicate ID: {style_id})")
+                            
                     else:
-                        # Fallback if ID is missing (rare)
+                       
                         if url not in self.final_links:
                              self.final_links.append(url)
                              new_styles_found += 1
 
-                # 2. Status Update
+          
                 if new_styles_found > 0:
                     print(f"  > +{new_styles_found} NEW Styles found. (Total Unique: {len(self.final_links)})")
                     no_new_products_attempts = 0
@@ -98,12 +95,10 @@ class ArmedAngelsProCollector:
                     no_new_products_attempts += 1
                     print(f"  > No new styles found. Scrolling... ({no_new_products_attempts}/5)")
 
-                # 3. Stop Condition
                 if no_new_products_attempts >= 5:
                     print("--- Finished: No new styles found for 5 consecutive scrolls. ---")
                     break
 
-                # 4. Scroll & Load More
                 await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                 await asyncio.sleep(1.5)
                 
@@ -120,7 +115,6 @@ class ArmedAngelsProCollector:
                                 break
                 except: pass
 
-            # 5. Save Results
             print(f"\nSAVING {len(self.final_links)} UNIQUE STYLE LINKS TO {self.output_file}...")
             
             with open(self.output_file, "w") as f:
@@ -131,15 +125,10 @@ class ArmedAngelsProCollector:
             await browser.close()
 
 if __name__ == "__main__":
-    # --- CONFIGURATION ---
-    
-    # 1. FOR MEN
+
     URL = "https://www.armedangels.com/en-be/collections/men"
     FILE = "armedangels_men_links.txt"
     
-    # 2. FOR WOMEN (Uncomment to use)
-    # URL = "https://www.armedangels.com/en-be/collections/women"
-    # FILE = "armedangels_women_links.txt"
 
     collector = ArmedAngelsProCollector(URL, FILE)
     asyncio.run(collector.run())
