@@ -1,0 +1,108 @@
+import pandas as pd
+import re
+import nltk
+import numpy as np
+from nltk.corpus import stopwords
+from nltk.stem import LancasterStemmer, PorterStemmer
+from nltk.tokenize import word_tokenize
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# --- Step 0: Setup ---
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    nltk.download('punkt_tab')
+
+class TextMiner:
+    def __init__(self, file_path, column_name='description', ngram_type='unigram', use_aggressive_stemming=True):
+        self.file_path = file_path
+        self.column_name = column_name
+        self.ngram_type = ngram_type
+        
+        if use_aggressive_stemming:
+            self.stemmer = LancasterStemmer()
+            print(">> Initialized with Lancaster Stemmer (Aggressive)")
+        else:
+            self.stemmer = PorterStemmer()
+            print(">> Initialized with Porter Stemmer (Standard)")
+            
+        self.stop_words = set(stopwords.words('english'))
+        self.vectorizer = None
+        self.tfidf_matrix = None
+        self.cosine_sim = None
+        self.df = None
+
+    def preprocess(self, text):
+        """Reusable preprocessing function to ensure queries match corpus format."""
+        text = str(text).lower()
+        text = re.sub(r'[^\w\s]', '', text)
+        text = re.sub(r'\d+', '', text)
+        tokens = word_tokenize(text)
+        
+        cleaned = []
+        for t in tokens:
+            if t not in self.stop_words and len(t) > 2:
+                cleaned.append(self.stemmer.stem(t))
+                
+        return " ".join(cleaned)
+
+    def run_analysis(self):
+        print(f"\n--- LOADING & PROCESSING ({self.ngram_type}) ---")
+        try:
+            self.df = pd.read_excel(self.file_path)
+        except FileNotFoundError:
+            return "Error: File not found."
+            
+        self.df = self.df.dropna(subset=[self.column_name]).reset_index(drop=True)
+        print(f"Loaded {len(self.df)} documents.")
+        
+        print("Preprocessing text...")
+        processed_corpus = self.df[self.column_name].apply(self.preprocess).tolist()
+        
+        print("Vectorizing (TF-IDF)...")
+        if self.ngram_type == 'bigram':
+            n_range = (2, 2)
+        else:
+            n_range = (1, 1)
+            
+        self.vectorizer = TfidfVectorizer(ngram_range=n_range)
+        self.tfidf_matrix = self.vectorizer.fit_transform(processed_corpus)
+        feature_names = self.vectorizer.get_feature_names_out()
+        
+        print("\n" + "="*30)
+        print("TF-IDF MATRIX")
+        print("="*30)
+        df_tfidf = pd.DataFrame(self.tfidf_matrix.todense(), columns=feature_names)
+        df_tfidf.index = [f"Doc {i+1}" for i in range(len(self.df))]
+        print(df_tfidf)
+        
+        print("\n" + "="*30)
+        print("SIMILARITY MATRIX")
+        print("="*30)
+        self.cosine_sim = cosine_similarity(self.tfidf_matrix, self.tfidf_matrix)
+        df_sim = pd.DataFrame(self.cosine_sim, 
+                              index=[f"Doc {i+1}" for i in range(len(self.df))],
+                              columns=[f"Doc {i+1}" for i in range(len(self.df))])
+        print(df_sim)
+        return self
+
+    def get_top_similar(self, doc_index, n=3):
+        print(f"\n--- Top {n} matches for Document {doc_index+1} ---")
+        scores = list(enumerate(self.cosine_sim[doc_index]))
+        scores = sorted(scores, key=lambda x: x[1], reverse=True)[1:n+1]
+        
+        for idx, score in scores:
+            print(f"Match: Doc {idx+1} (Score: {score:.4f})")
+            print(f"   -> Text: {self.df.iloc[idx][self.column_name][:100]}...")
+
+
+
+miner = TextMiner('patagonia_men_final.xlsx', column_name='Description', ngram_type='unigram')
+miner.run_analysis()
+
+
+miner.get_top_similar(doc_index=0, n=3)
+
