@@ -5,7 +5,7 @@ NLP & Sustainability: Measuring the Semantic Gap between Marketing Claims and ES
 ![Status](https://img.shields.io/badge/Status-In_Progress-yellow)
 ![Course](https://img.shields.io/badge/Course-Web_Mining-orange)
 
-## 📖 Context and Objectives
+## Context and Objectives
 
 This project is carried out as part of the **Web Mining (MLSMM2153)** course. As consultants, our mission is to audit the communication strategy of "committed" online stores.
 
@@ -20,7 +20,7 @@ The objective is to confront the marketing vocabulary used on product pages with
 
 ---
 
-## ⚙️ Project Architecture
+## Project Architecture
 
 The project follows a strict three-step data pipeline:
 
