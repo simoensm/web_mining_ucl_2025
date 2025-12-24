@@ -33,7 +33,7 @@ The project follows a strict three-step data pipeline:
 ### 2. Text Mining (NLP)
 Transforming the raw corpus into semantic insights.
 * **Preprocessing:** Tokenization, Filtering (Stopwords), Lemmatization/Stemming.
-* **Vectorization:** TF-IDF / Doc2Vec.
+* **Vectorization:** TF-IDF
 * **Analyses:**
     * *Descriptive:* Word clouds, n-grams.
     * *Semantic:* Sentiment analysis/tonality.
@@ -42,5 +42,5 @@ Transforming the raw corpus into semantic insights.
 ### 3. Link Analysis (Graph Theory)
 Modeling relationships between products and categories.
 * **Graph Construction:** Nodes (Products/Categories) and Edges (Similarity links or navigation).
-* **Metrics:** Degree Centrality, PageRank, Betweenness.
+* **Metrics:** Degree Centrality, PageRank, Betweenness, Modularity...
 * **Objective:** Identify "bridge" products and the structure of the sustainable offer.
