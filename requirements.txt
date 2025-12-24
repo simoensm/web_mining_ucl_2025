@@ -1,19 +1,9 @@
-# Data Manipulation
 pandas
 numpy
 
-# Web Scraping
 playwright
 beautifulsoup4
-lxml
 requests
 
-# Text Mining (NLP)
 nltk
 scikit-learn
-sentence-transformers
-
-# Link Analysis & Visualization
-networkx
-matplotlib
-seaborn
