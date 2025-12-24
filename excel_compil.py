@@ -4,7 +4,6 @@ import os
 
 FILE_TYPE = 'xlsx'  
 OUTPUT_FILENAME = 'all_products.xlsx'
-# ---------------------
 
 def merge_files():
     search_pattern = f"*.{FILE_TYPE}"
