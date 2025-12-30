@@ -203,9 +203,9 @@ class TextMinerTXT:
 # --- EXEMPLE D'UTILISATION ---
 
 # 1. Configuration
-# Assurez-vous d'avoir un fichier 'patagonia-progress-report-2025.txt' dans le même dossier
+# Assurez-vous d'avoir un fichier 'report_ecoalf_2022.txt' dans le même dossier
 miner = TextMinerTXT(
-    file_path='patagonia-progress-report-2025.txt',  
+    file_path='report_ecoalf_2022.txt',  
     ngram_type='unigram',       # 'unigram' (mots seuls) ou 'bigram' (paires de mots)
     normalization='lemmatization' # 'lemmatization' ou 'stemming'
 )

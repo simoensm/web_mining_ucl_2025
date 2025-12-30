@@ -294,7 +294,7 @@ if miner.run_analysis():
     miner.find_optimal_clusters(max_k=15) 
     
     # B. Clustering (Mettez ici le chiffre trouvé grâce au graphique, ex: 6)
-    miner.perform_clustering(n_clusters=8)
+    miner.perform_clustering(n_clusters=10)
     
     # C. Visualisation des clusters (Graphique PCA)
     miner.visualize_clusters_pca()

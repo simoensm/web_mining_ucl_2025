@@ -39,7 +39,7 @@ def compare_documents(file_1, file_2):
     print(f"-"*30)
     print(f"FREQUENCY OVERLAP: {similarity_score * 100:.2f}%")
 
-file_1 = 'word_frequencies_products.xlsx'
-file_2 = 'word_frequencies_report.xlsx'
+file_1 = 'word_frequencies_products_patagonia.xlsx'
+file_2 = 'word_frequencies_products_ecoalf.xlsx'
 
 compare_documents(file_1, file_2)
