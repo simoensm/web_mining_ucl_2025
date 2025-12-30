@@ -68,6 +68,38 @@ class TextMiner:
         text = re.sub(r'country of origin.*', '', text)
         text = re.sub(r'weight\s*\d+.*', '', text)
         return text
+    
+    def get_word_frequencies(self):
+        """
+        Generates a simple dataframe with Words and their Global Count.
+        """
+        from sklearn.feature_extraction.text import CountVectorizer
+        
+        print(f"\n--- CALCULATING RAW FREQUENCIES ({self.ngram_type}) ---")
+        
+        # 1. Define N-gram range based on your class settings
+        if self.ngram_type == 'trigram': n_range = (3, 3)
+        elif self.ngram_type == 'bigram': n_range = (2, 2)
+        else: n_range = (1, 1)
+
+        # 2. Re-process the text to ensure we count the cleaned versions
+        # (We apply the existing self.preprocess function)
+        corpus = self.df[self.column_name].apply(self.preprocess)
+        
+        # 3. Count using CountVectorizer (Pure counting, no TF-IDF weighting)
+        # We keep min_df/max_df generic here to capture most words
+        cv = CountVectorizer(ngram_range=n_range, min_df=2) 
+        X = cv.fit_transform(corpus)
+        
+        # 4. Sum up the counts per word
+        total_counts = np.asarray(X.sum(axis=0)).flatten()
+        vocab = cv.get_feature_names_out()
+        
+        # 5. Create DataFrame and Sort
+        freq_df = pd.DataFrame({'Term': vocab, 'Frequency': total_counts})
+        freq_df = freq_df.sort_values(by='Frequency', ascending=False).reset_index(drop=True)
+        
+        return freq_df
 
     def preprocess(self, text):
         # Étape 1 : Nettoyage structurel
@@ -248,13 +280,21 @@ miner = TextMiner(
 
 # 2. Lancement de l'analyse
 if miner.run_analysis():
+
+    df_frequencies = miner.get_word_frequencies()
+
+    print("\n>> Top 20 Most Frequent Terms:")
+    print(df_frequencies.head(20))
+
+    df_frequencies.to_excel("word_frequencies_products.xlsx", index=False)
+    print(">> Saved full frequency list to 'word_frequencies_products.xlsx'")
     
     # A. Recherche du nombre optimal de clusters (Méthode du coude)
     # (Vous pouvez commenter cette ligne une fois que vous avez trouvé votre chiffre)
     miner.find_optimal_clusters(max_k=15) 
     
     # B. Clustering (Mettez ici le chiffre trouvé grâce au graphique, ex: 6)
-    miner.perform_clustering(n_clusters=12)
+    miner.perform_clustering(n_clusters=8)
     
     # C. Visualisation des clusters (Graphique PCA)
     miner.visualize_clusters_pca()
