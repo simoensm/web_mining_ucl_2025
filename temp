@@ -2,3 +2,4 @@
 - nuage de mot (par taux d'apparition) somme des colonnes dans tf idf pour savoir
 - chercher les engagements de patagonia (scrapping) 
 - comparer le vocabulaire des engagements à celui des descriptions produits pour donner un score d'accord entre produits/engagements.
+- sur produits mais mtn sur les mots (déterminer des catégories de mots utilisés dans les descriptions) par co-occurance ? 

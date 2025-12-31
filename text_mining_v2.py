@@ -44,7 +44,7 @@ class TextMiner:
             'intro', 'details', 'specs', 'features', 'materials', 'care', 'instructions',
             'weight', 'country', 'origin', 'made', 'factory', 'certified',
             'machine', 'wash', 'warm', 'cold', 'bleach', 'dry', 'tumble', 'iron',
-            'oz', 'g', 'lbs', 'premium', 'product', 'regular', 'fit'
+            'oz', 'g', 'lbs', 'premium', 'product', 'regular', 'fit', 
         }
         self.stop_words.update(noise_words)
         
@@ -237,6 +237,7 @@ class TextMiner:
         plt.axis('off')
         plt.title(f"Nuage de mots ({self.ngram_type})")
         plt.show()
+
     def export_to_gephi(self, name_column, threshold=0.2, nodes_file='gephi_nodes.csv', edges_file='gephi_edges.csv'):
         print(f"\n--- EXPORTING TO GEPHI (Threshold: {threshold}) ---")
         
