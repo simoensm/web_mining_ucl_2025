@@ -1,0 +1,60 @@
+import pdfplumber
+import pandas as pd
+import os
+
+def extraire_pages_pdf():
+    # 1. Chemin vers le fichier 
+    pdf_path = "Armedangels/Social-plan-link-8.pdf"
+    
+    # Vérification de l'existence du fichier
+    if not os.path.exists(pdf_path):
+        print(f"Erreur : Le fichier est introuvable à l'adresse : {pdf_path}")
+        return
+
+    print(f"Début de l'extraction exhaustive")
+    donnees_finales = []
+
+    # 2. Ouverture et Extraction (Étapes 2 et 3 de la collecte)
+    try:
+        with pdfplumber.open(pdf_path) as pdf:
+            total_pages = len(pdf.pages)
+            print(f"Nombre de pages détectées par le système : {total_pages}")
+            
+            # On boucle sur chaque page, de la 1 à la 87 (ou le total réel)
+            for i in range(total_pages):
+                page = pdf.pages[i]
+                texte_page = page.extract_text()
+                
+                # Nettoyage du "bruit" (espaces blancs inutiles)
+                if texte_page:
+                    texte_nettoye = texte_page.strip()
+                else:
+                    texte_nettoye = "[Page vide ou contenant uniquement des images]"
+                
+                donnees_finales.append({
+                    "Page": i + 1,
+                    "Contenu": texte_nettoye
+                })
+                
+                # Barre de progression simple
+                if (i + 1) % 10 == 0 or (i + 1) == total_pages:
+                    print(f"Progression : {i + 1}/{total_pages} pages traitées.")
+
+        # 3. Stockage structuré (Étape 4 de la collecte)
+        # On utilise Pandas pour créer un tableau propre
+        df = pd.DataFrame(donnees_finales)
+        
+        # Sauvegarde en CSV (format simple et facile à lire)
+        nom_sortie = "armedangels_action_report_2021_complet.csv"
+        df.to_csv(nom_sortie, index=False, encoding='utf-8')
+        
+        print("-" * 30)
+        print(f"Extraction terminée avec succès !")
+        print(f"Fichier créé : {nom_sortie}")
+        print(f"Volume total : {len(df)} pages enregistrées.")
+
+    except Exception as e:
+        print(f"Une erreur technique est survenue : {e}")
+
+if __name__ == "__main__":
+    extraire_pages_pdf()

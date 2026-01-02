@@ -273,7 +273,7 @@ class TextMiner:
 
 # 1. Initialisation
 miner = TextMiner(
-    'cleaned_all_products.xlsx', 
+    'Excel/cleaned_all_products.xlsx', 
     column_name='description', 
     ngram_type='unigram',         
     normalization='lemmatization'
