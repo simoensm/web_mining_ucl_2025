@@ -1,3 +1,4 @@
+#Même principe que pour le script des hommes, mais cette fois pour la section femmes du site Patagonia.
 import asyncio
 from playwright.async_api import async_playwright
 
