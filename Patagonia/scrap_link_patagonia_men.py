@@ -1,7 +1,7 @@
 ##### Note importante : nous sommes partis du principe que nous allions faire le scraping pour un premier site (Patagonia) et ensuite appliquer le même code pour d'autres sites similaires.
-##### Nous n'allons commenter, dès lors, que ce code pour la partie scraping, et non les autres scripts similaires.
+##### Nous n'allons commenter, dès lors, que ce code pour la partie scraping, et non les autres scripts similaires des 2 autres sites (Ecoalf & Armedangels).
 
-### Explication de la bibliothèque Playwright (NB : cette bibliothèque doit être installée via pip avant d'exécuter ce script et n'est pas utilisable dans la version 
+### Explication de la bibliothèque Playwright (NB : cette bibliothèque doit être installée via pip avant d'exécuter ce script et n'est pas utilisable dans la version 3.13 de Python)
 ### Playwright est un peu comme un "robot marionnettiste" qui ouvre un vrai navigateur Chrome, clique sur des boutons et lit le contenu de la page.
 
 import asyncio
@@ -35,7 +35,7 @@ async def harvest_mens_links():
             load_more = page.locator("button.load-more, .search-results-footer button")
             if await load_more.count() > 0 and await load_more.first.is_visible():
                 try:
-                    await load_more.first.click(force=True)                     
+                    await load_more.first.click(force=True)                                         
                     await asyncio.sleep(2)
                     retries = 0
                 except:
