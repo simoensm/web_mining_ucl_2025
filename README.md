@@ -33,7 +33,7 @@ Note: The scripts utilize NLTK resources (stopwords, punkt, wordnet). The script
 ## Usage Pipeline
 Follow the steps below to replicate the analysis.
 
-1. Scraping and Data Collection
+## 1. Scraping and Data Collection
 
 This stage involves harvesting data from websites and converting manual reports into usable text.
    A. Web Scraping Three specific websites are targeted. Each website has a dedicated folder containing two primary scripts:
