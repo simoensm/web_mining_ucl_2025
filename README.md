@@ -37,63 +37,46 @@ Follow the steps below to replicate the analysis.
 
 This stage involves harvesting data from websites and converting manual reports into usable text.
    A. Web Scraping Three specific websites are targeted. Each website has a dedicated folder containing two primary scripts:
-
    - Link Harvesting (links_site.py): Run this first. It scrapes the target category page to harvest all product URLs.
          Input: Category page URL.
          Output: A text file (e.g., site_men_links.txt).
      
    - Product Scraping (products_site.py): Run this second. It iterates through the text file generated in the previous step to scrape specific product details.
-         Input: The links text file.
-   - Output: A raw Excel file (e.g., site_men_products.xlsx).
-     Note: Ensure you manually update the category variable (e.g., changing from 'men' to 'women') in the script before execution.
+        Input: The links text file.
+        Output: A raw Excel file (e.g., site_men_products.xlsx).
+        Note: Ensure you manually update the category variable (e.g., changing from 'men' to 'women') in the script before execution.
 
    B. PDF Report Conversion Used for processing ESG/CSR reports manually downloaded as PDFs.
+      Script: pdf_to_txt_patagonia.py
+      Functionality: This script reads PDF files, repairs broken text spacing (e.g., converting "T o h e l p" to "To help"), removes non-alphabetic characters, and filters stopwords.
+      Output: A clean .txt file ready for text mining.
 
-   - Script: pdf_to_txt_patagonia.py
-   - Functionality: This script reads PDF files, repairs broken text spacing (e.g., converting "T o h e l p" to "To help"), removes non-alphabetic characters, and filters stopwords.
-   - Output: A clean .txt file ready for text mining.
+   C. Data Compilation (Optional)
+      Script: excel_compil.py
+      Functionality: If performing cross-site analysis, use this script to merge multiple product Excel files (.xlsx) or CSV files into a single master dataset.
 
-C. Data Compilation (Optional)
+## 2. Data Cleaning
 
-Script: excel_compil.py
-
-Functionality: If performing cross-site analysis, use this script to merge multiple product Excel files (.xlsx) or CSV files into a single master dataset.
-
-2. Data Cleaning
 Before analysis, the raw product data must be standardized.
+   Script: corpus_cleaning.py
+   Input: The raw product Excel file (e.g., .patagonia/patagonia_products.xlsx).
+   Functionality:
+   - Standardizes column names to lowercase.
+   - Removes exact duplicates based on product names.
+   Deep Cleaning: Removes numbers, special characters, content inside brackets, and converts text to lowercase.
+   Output: A clean dataset (e.g., patagonia_dataset.xlsx).
 
-Script: corpus_cleaning.py
+## 3. Text Mining (NLP)
 
-Input: The raw product Excel file (e.g., .patagonia/patagonia_products.xlsx).
-
-Functionality:
-
-Standardizes column names to lowercase.
-
-Removes exact duplicates based on product names.
-
-Deep Cleaning: Removes numbers, special characters, content inside brackets, and converts text to lowercase.
-
-Output: A clean dataset (e.g., patagonia_dataset.xlsx).
-
-3. Text Mining (NLP)
 This module extracts semantic insights from the cleaned data.
-
 A. Unsupervised Product Clustering
-
-Script: text_mining_main.py
-
-Input: The cleaned dataset from Step 2.
-
-Functionality:
-
-Preprocessing: Tokenization, Lemmatization (or Stemming), and stopword filtering.
-
-Vectorization: Calculates a TF-IDF matrix manually (TF * IDF).
-
-Analysis: Uses the Elbow method to determine the optimal number of clusters, performs K-Means clustering, and visualizes results using PCA.
-
-Output: An Excel file enriched with a cluster column.
+   Script: text_mining_main.py
+   Input: The cleaned dataset from Step 2.
+   Functionality: 
+   Preprocessing: Tokenization, Lemmatization (or Stemming), and stopword filtering.
+   Vectorization: Calculates a TF-IDF matrix manually (TF * IDF).
+   Analysis: Uses the Elbow method to determine the optimal number of clusters, performs K-Means clustering, and visualizes results using PCA.
+   Output: An Excel file enriched with a cluster column.
 
 B. Supervised Vocabulary Analysis
 
