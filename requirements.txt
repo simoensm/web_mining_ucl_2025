@@ -1,9 +1,8 @@
 pandas
 numpy
-
-playwright
-beautifulsoup4
-requests
-
-nltk
 scikit-learn
+matplotlib
+wordcloud
+nltk
+pypdf
+openpyxl
