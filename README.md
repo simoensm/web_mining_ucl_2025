@@ -33,7 +33,7 @@ Note: The scripts utilize NLTK resources (stopwords, punkt, wordnet). The script
 ## Usage Pipeline
 Follow the steps below to replicate the analysis.
 
-## 1. Scraping and Data Collection
+### 1. Scraping and Data Collection
 
 This stage involves harvesting data from websites and converting manual reports into usable text.
    A. Web Scraping Three specific websites are targeted. Each website has a dedicated folder containing two primary scripts:
@@ -55,7 +55,7 @@ This stage involves harvesting data from websites and converting manual reports 
       Script: excel_compil.py
       Functionality: If performing cross-site analysis, use this script to merge multiple product Excel files (.xlsx) or CSV files into a single master dataset.
 
-## 2. Data Cleaning
+### 2. Data Cleaning
 
 Before analysis, the raw product data must be standardized.
 
@@ -67,7 +67,7 @@ Before analysis, the raw product data must be standardized.
    Deep Cleaning: Removes numbers, special characters, content inside brackets, and converts text to lowercase.
    Output: A clean dataset (e.g., patagonia_dataset.xlsx).
 
-## 3. Text Mining (NLP)
+### 3. Text Mining (NLP)
 
 This module extracts semantic insights from the cleaned data.
 
