@@ -58,6 +58,7 @@ This stage involves harvesting data from websites and converting manual reports 
 ## 2. Data Cleaning
 
 Before analysis, the raw product data must be standardized.
+
    Script: corpus_cleaning.py
    Input: The raw product Excel file (e.g., .patagonia/patagonia_products.xlsx).
    Functionality:
@@ -69,7 +70,8 @@ Before analysis, the raw product data must be standardized.
 ## 3. Text Mining (NLP)
 
 This module extracts semantic insights from the cleaned data.
-A. Unsupervised Product Clustering
+
+A. Unsupervised Product Clustering :
    Script: text_mining_main.py
    Input: The cleaned dataset from Step 2.
    Functionality: 
@@ -78,39 +80,27 @@ A. Unsupervised Product Clustering
    Analysis: Uses the Elbow method to determine the optimal number of clusters, performs K-Means clustering, and visualizes results using PCA.
    Output: An Excel file enriched with a cluster column.
 
-B. Supervised Vocabulary Analysis
+B. Supervised Vocabulary Analysis :
+   Script: text_mining_voc.py
+   Functionality: Analyzes product descriptions based on pre-defined lexicons:
+   ESG: (e.g., fair trade, carbon, organic).
+   Technical: (e.g., waterproof, durable, gore-tex).
+   Materials: (e.g., polyester, hemp, nylon).
+   Output: Assigns membership scores to products, allowing for comparison of vocabulary usage across different brands.
 
-Script: text_mining_voc.py
+C. Report Analysis :
 
-Functionality: Analyzes product descriptions based on pre-defined lexicons:
+   Script: text_mining_text_files.py
+   Input: Text files generated from PDFs (Step 1B).
+   Functionality: Performs n-gram analysis (unigram, bigram, trigram) and generates word clouds directly from raw text files to analyze corporate reporting discourse.
 
-ESG: (e.g., fair trade, carbon, organic).
+## 4. Link Analysis
 
-Technical: (e.g., waterproof, durable, gore-tex).
-
-Materials: (e.g., polyester, hemp, nylon).
-
-Output: Assigns membership scores to products, allowing for comparison of vocabulary usage across different brands.
-
-C. Report Analysis
-
-Script: text_mining_text_files.py
-
-Input: Text files generated from PDFs (Step 1B).
-
-Functionality: Performs n-gram analysis (unigram, bigram, trigram) and generates word clouds directly from raw text files to analyze corporate reporting discourse.
-
-4. Link Analysis
 This step prepares the data for network visualization in Gephi.
 
-Script: gephi_convert.py
-
-Input: The clustered Excel dataset and the TF-IDF matrix from Step 3A.
-
-Functionality:
-
-Nodes: Generates a list of nodes representing products (ID, Label, Cluster).
-
-Edges: Calculates the Cosine Similarity between all products. Edges are created only if the similarity exceeds a defined threshold (default: 0.20).
-
-Output: Two CSV files (nodes.csv and edges.csv) importable into Gephi.
+   Script: gephi_convert.py
+   Input: The clustered Excel dataset and the TF-IDF matrix from Step 3A.
+   Functionality:
+   Nodes: Generates a list of nodes representing products (ID, Label, Cluster).
+   Edges: Calculates the Cosine Similarity between all products. Edges are created only if the similarity exceeds a defined threshold (default: 0.20).
+   Output: Two CSV files (nodes.csv and edges.csv) importable into Gephi.
