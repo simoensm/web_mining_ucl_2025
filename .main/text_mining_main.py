@@ -123,22 +123,22 @@ class TextMiner:
     def vectorize_tfidf_manual(self, n_docs=5):
         print(f"\n3. TF-IDF Vectorization")
         
-        if self.ngram_type == 'trigram': n_range = (3, 3)
-        elif self.ngram_type == 'bigram': n_range = (2, 2)
-        else: n_range = (1, 1)
+        if self.ngram_type == 'trigram': n_range = (3, 3) # Choix des n-grammes utilisés pour l'analyse (trigram)
+        elif self.ngram_type == 'bigram': n_range = (2, 2) # Choix des n-grammes utilisés pour l'analyse (bigram)
+        else: n_range = (1, 1) # Choix des n-grammes utilisés pour l'analyse (unigram)
 
         
         self.vectorizer = CountVectorizer(ngram_range=n_range, min_df=2, max_df=0.65) # Compte le nombre de mots
         # min_df=3 : ignore les mots qui apparaissent dans moins de 3 documents (trop rares)
         # max_df=0.85 : ignore les mots qui apparaissent dans plus de 85% des documents (trop communs)
 
-        raw_matrix_sparse = self.vectorizer.fit_transform(self.df['processed_text'])
-        raw_counts = raw_matrix_sparse.toarray()
-        self.feature_names = self.vectorizer.get_feature_names_out()
+        raw_matrix_sparse = self.vectorizer.fit_transform(self.df['processed_text']) 
+        raw_counts = raw_matrix_sparse.toarray() 
+        self.feature_names = self.vectorizer.get_feature_names_out() 
         
         print(f"   > matrix calculated: {raw_counts.shape} (Documents x Tokens)")
 
-        # TF (Fréquence Relative) => (Nombre d'occurrences du mot) / (Nombre max d'occurrences dans le corpus
+        # TF (Fréquence Relative) => (Nombre d'occurrences du mot) / (Nombre max d'occurrences dans le corpus)
         max_counts_per_doc = raw_counts.max(axis=1)
         max_counts_per_doc[max_counts_per_doc == 0] = 1 
         self.tf_matrix = raw_counts / max_counts_per_doc[:, np.newaxis]
@@ -147,7 +147,7 @@ class TextMiner:
         N_docs = raw_counts.shape[0]
         doc_freq = (raw_counts > 0).sum(axis=0)  #Eviter la division par zero car erreurs
         doc_freq[doc_freq == 0] = 1
-        self.idf_vector = np.log(N_docs / doc_freq)
+        self.idf_vector = np.log(N_docs / doc_freq) # Formule de l'IDF
 
         # TF-IDF Final => TF * IDF
         self.tfidf_matrix = self.tf_matrix * self.idf_vector
@@ -158,56 +158,59 @@ class TextMiner:
             filename = f"tfidf_matrix_{self.ngram_type}.xlsx"
             print(f"   > Exporting full matrix to {filename}")
             
-            df_tfidf = pd.DataFrame(self.tfidf_matrix, columns=self.feature_names)
+            df_tfidf = pd.DataFrame(self.tfidf_matrix, columns=self.feature_names) # Crée une table pandas à partir de la matrice TF-IDF
             
             
-            df_tfidf.to_excel(filename, index=False)
+            df_tfidf.to_excel(filename, index=False) # Enregistre la table ainsi créée dans un fichier Excel
             print(f"   > Export successful: {filename}")
         except Exception as e:
-            print(f"   > Error exporting TF-IDF matrix: {e}")
+            print(f"   > Error exporting TF-IDF matrix: {e}") #Pour gérer les erreurs d'exportation
     
-        subset_tf = self.tf_matrix[:n_docs, :]
-        active_indices = np.where(subset_tf.sum(axis=0) > 0)[0]
-        
-        if len(active_indices) > 8: 
+        # --- PRÉVISUALISATION DANS LA CONSOLE ---
+        # Le code ci-dessous sert juste à afficher un joli petit tableau dans le terminal pour vérifier que ça a marché, sans afficher les 5000 colonnes 
+
+        subset_tf = self.tf_matrix[:n_docs, :]  #On prend les n_docs premiers documents
+        active_indices = np.where(subset_tf.sum(axis=0) > 0)[0]  #On cherche les colonnes actives (avec des valeurs non nulles)
+        # On limite l'affichage à 8 colonnes pour ne pas surcharger la console
+        if len(active_indices) > 8:  
             active_indices = active_indices[:8]
         elif len(active_indices) == 0:
-            active_indices = np.arange(min(8, len(self.feature_names)))
+            active_indices = np.arange(min(8, len(self.feature_names))) #Si toutes les colonnes sont nulles, on prend les 8 premières colonnes par défaut
 
-        feature_subset = self.feature_names[active_indices]
+        feature_subset = self.feature_names[active_indices] # Extraction des noms des mots choisis 
 
          # Affichage des matrices TF, IDF et TF-IDF
 
         print("\n   > TF (Relative Frequency):")
-        print(pd.DataFrame(self.tf_matrix[:n_docs, active_indices], columns=feature_subset).round(3))
+        print(pd.DataFrame(self.tf_matrix[:n_docs, active_indices], columns=feature_subset).round(3)) #Arrondi à 3 décimales pour une meilleure lisibilité x3
 
         print("\n   > IDF (Logarithm):")
-        print(pd.DataFrame([self.idf_vector[active_indices]], columns=feature_subset).round(3))
+        print(pd.DataFrame([self.idf_vector[active_indices]], columns=feature_subset).round(3)) 
 
         print("\n   > TF-IDF Final:")
-        print(pd.DataFrame(self.tfidf_matrix[:n_docs, active_indices], columns=feature_subset).round(3))
+        print(pd.DataFrame(self.tfidf_matrix[:n_docs, active_indices], columns=feature_subset).round(3)) 
 
-    def show_elbow_method(self, max_k=10): # Affiche la méthode du coude pour déterminer le nombre optimal de clusters
+    def show_elbow_method(self, max_k=10): #Affiche la méthode du coude pour déterminer le nombre optimal de clusters, max_k est le nombre maximum de clusters à tester
         print(f"\n4. Determining Number of Clusters (Elbow Method)")
-        inertias = []
-        K_range = range(1, max_k + 1)
+        inertias = [] #Liste pour stocker les inerties 
+        K_range = range(1, max_k + 1) #Crée une plage de k de 1 à max_k
         
         print("   > Calculating inertias...", end='')
-        for k in K_range:
-            km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
-            km.fit(self.tfidf_matrix)
-            inertias.append(km.inertia_)
-            print(".", end='')
+        for k in K_range: #On teste chaque valeur de k et on calcule l'inertie
+            km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42) #Initialisation du k-Means, n_init = 10 va lancer l'algorithme 10 fois avec des centroides différents et garder le meilleur
+            km.fit(self.tfidf_matrix)                                               #random_state va permettre de reproduire les mêmes résultats à chaque exécution
+            inertias.append(km.inertia_) #L'inertie est la somme des distances au carré entre chaque point et le centroïde de son cluster
+            print(".", end='') #pour indiquer la progression
         print(" Done.")
 
         # Affichage du graphique
-        plt.figure(figsize=(8, 4))
-        plt.plot(K_range, inertias, 'bx-')
-        plt.xlabel('Number of Clusters (k)')
-        plt.ylabel('Inertia')
-        plt.title('Elbow Method')
-        plt.grid(True)
-        plt.show()
+        plt.figure(figsize=(8, 4)) # Taille de la figure
+        plt.plot(K_range, inertias, 'bx-') # 'bx-' signifie des points bleus avec des lignes
+        plt.xlabel('Number of Clusters (k)') # Label de l'axe x
+        plt.ylabel('Inertia') # Label de l'axe y
+        plt.title('Elbow Method') # Titre du graphique
+        plt.grid(True) # Grille pour une meilleure lisibilité
+        plt.show() # Affiche le graphique
 
     def perform_clustering(self, n_clusters):
         print(f"\n5. Clustering (K={n_clusters})")

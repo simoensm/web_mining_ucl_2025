@@ -1,10 +1,10 @@
-#Code pouvant aggréger plusieurs fichiers Excel ou CSV en un seul fichier Excel.
+#Code pouvant aggréger plusieurs fichiers Excel ou CSV en un seul fichier Excel. Nécessité de mettre les fichiers à fusionner dans le même répertoire que ce script en dehors des folders !
 import pandas as pd # Pour la manipulation des données
 import glob # Pour la recherche de fichiers
 import os
 
 FILE_TYPE = 'xlsx'  #Type de fichier à traiter ('xlsx' ou 'csv')
-OUTPUT_FILENAME = 'all_patagonia_products.xlsx' #Nom du fichier de sortie
+OUTPUT_FILENAME = 'all_products.xlsx' #Nom du fichier de sortie
 
 def merge_files():
     search_pattern = f"*.{FILE_TYPE}" 
