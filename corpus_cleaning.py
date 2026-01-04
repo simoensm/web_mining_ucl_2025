@@ -2,8 +2,8 @@ import pandas as pd
 import re
 import os
 
-INPUT_FILE = ".patagonia/patagonia_products.xlsx"
-OUTPUT_FILE = ".patagonia/patagonia_dataset.xlsx"
+INPUT_FILE = ".armedangels/all_armedangels_products.xlsx"
+OUTPUT_FILE = ".armedangels/armedangels_dataset.xlsx"
 
 def clean_text_content(text):
     if not isinstance(text, str):

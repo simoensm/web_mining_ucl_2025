@@ -234,7 +234,7 @@ if __name__ == "__main__":
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    miner = TextMiner('.patagonia/patagonia_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode)
+    miner = TextMiner('.armedangels/armedangels_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) # à remplacer
 
     if miner.load_and_process():
         miner.show_word_frequencies()
@@ -249,7 +249,7 @@ if __name__ == "__main__":
         
         miner.perform_clustering(n_clusters=k)
         
-        output_name = f".patagonia/patagonia_clustered_{ngram_mode}.xlsx"
+        output_name = f".armedangels/armedangels_clustered_{ngram_mode}.xlsx" # à remplacer
         miner.save_results(output_name)
         
         miner.visualize_pca()

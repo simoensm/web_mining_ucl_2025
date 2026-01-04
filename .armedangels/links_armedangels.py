@@ -2,8 +2,8 @@ import asyncio
 from playwright.async_api import async_playwright
 
 # --- CONFIGURATION ---
-TARGET_URL = "https://www.armedangels.com/en-be/collections/men" # women
-OUTPUT_FILE = ".armedangels/armedangels_men_links.txt" # women
+TARGET_URL = "https://www.armedangels.com/en-be/collections/women" # women
+OUTPUT_FILE = ".armedangels/armedangels_women_links.txt" # women
 
 async def harvest_links():
     async with async_playwright() as p:

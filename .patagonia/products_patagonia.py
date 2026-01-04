@@ -5,10 +5,10 @@ from bs4 import BeautifulSoup  #Nécessaire pour analyser le HTML et extraire le
 import os
 
 # --- CONFIGURATION ---
-INPUT_FILE = ".patagonia/patagonia_men_links.txt" #Nom du fichier contenant les liens à scraper
-OUTPUT_FILE = ".patagonia/patagonia_men_products.xlsx" #Nom du fichier Excel de sortie
+INPUT_FILE = ".patagonia/patagonia_women_links.txt" #Nom du fichier contenant les liens à scraper
+OUTPUT_FILE = ".patagonia/patagonia_women_products.xlsx" #Nom du fichier Excel de sortie
 
-###Une page Patagonia typique a une description principale et une section "accordéon" pour les détails. Nous devons séparer ce qui nous sera utile des autres informations.
+#Une page Patagonia typique a une description principale et une section "accordéon" pour les détails. Nous devons séparer ce qui nous sera utile des autres informations.
 
 async def get_raw_description(soup):
     full_text = []  #Liste pour stocker les données extraites = Mémoire temporaire avant de sauvegarder dans Excel
@@ -28,7 +28,7 @@ async def get_raw_description(soup):
     return " ".join(full_text)
 
 
-### Boucle = pour chaque URL, il navigue, récupère le HTML, le transforme en "soupe", extrait les infos, et stocke les données.
+# Boucle = pour chaque URL, il navigue, récupère le HTML, le transforme en "soupe", extrait les infos, et stocke les données.
 async def scrape_products():
     if not os.path.exists(INPUT_FILE):
         print(f"Error: {INPUT_FILE} not found.") #Gestion d'erreur si le fichier n'existe pas

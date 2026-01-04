@@ -3,7 +3,7 @@ import glob
 import os
 
 FILE_TYPE = 'xlsx'  
-OUTPUT_FILENAME = 'all_products.xlsx'
+OUTPUT_FILENAME = '.patagonia/all_patagonia_products.xlsx'
 
 def merge_files():
     search_pattern = f"*.{FILE_TYPE}"

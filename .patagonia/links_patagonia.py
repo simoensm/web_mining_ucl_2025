@@ -7,8 +7,8 @@
 import asyncio
 from playwright.async_api import async_playwright #Ici, nous utilisons la version asynchrone de Playwright, ce qui signifie que notre code peut faire plusieurs choses en même temps, rendant le processus plus rapide.
 
-TARGET_URL = "https://eu.patagonia.com/gb/en/shop/mens" #L'URL de la page que nous voulons scraper, la logique est la même pour la section femmes.
-OUTPUT_FILE = ".patagonia/patagonia_men_links.txt" # women
+TARGET_URL = "https://eu.patagonia.com/gb/en/shop/womens" #L'URL de la page que nous voulons scraper, la logique est la même pour la section femmes.
+OUTPUT_FILE = ".patagonia/patagonia_women_links.txt" # women
 
 async def harvest_links():
     async with async_playwright() as p:
