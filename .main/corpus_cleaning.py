@@ -1,12 +1,13 @@
-import pandas as pd
-import re
-import os
+#Partie 2.4 du rapport - Fusion, suppression des doublons et nettoyage des descriptions
+import pandas as pd #importe pandas pour la manipulation des données
+import re #importe re pour les opérations de regex
+import os #importe os pour interragir avec le système d'exploitation
 
-INPUT_FILE = "all_products.xlsx"
-OUTPUT_FILE = "all_dataset.xlsx"
+INPUT_FILE = "all_products.xlsx" #Nom du fichier d'entrée
+OUTPUT_FILE = "all_dataset.xlsx" #Nom du fichier de sortie
 
 def clean_text_content(text):
-    if not isinstance(text, str):
+    if not isinstance(text, str): #Vérifie si le texte est une chaîne de caractères
         return ""
     
     # Passage en minuscules
@@ -29,23 +30,23 @@ def clean_text_content(text):
     # Nettoyage final des espaces
     text = re.sub(r'\s+', ' ', text).strip()
     
-    return text
+    return text #Retourne le texte nettoyé
 
 def run_cleaning():
-    if not os.path.exists(INPUT_FILE):
+    if not os.path.exists(INPUT_FILE): #Vérifie si le fichier d'entrée existe
         print(f"Error: File {INPUT_FILE} not found.")
         return
 
     print("Loading Raw Data")
-    df = pd.read_excel(INPUT_FILE)
-    print(f"Original shape: {df.shape}")
+    df = pd.read_excel(INPUT_FILE) #Charge les données brutes depuis le fichier Excel
+    print(f"Original shape: {df.shape}") 
 
     # Standardisation des colonnes
-    df.columns = df.columns.str.lower().str.strip()
+    df.columns = df.columns.str.lower().str.strip() #Met en minuscules et supprime les espaces des noms de colonnes (exemple " Name " -> "name")
 
     # Suppression des doublons exacts sur le nom
     if 'name' in df.columns:
-        df = df.drop_duplicates(subset=['name'], keep='first')
+        df = df.drop_duplicates(subset=['name'], keep='first') 
         print(f"After deduplication: {df.shape}")
 
     # Application du nettoyage profond sur la description

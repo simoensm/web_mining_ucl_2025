@@ -1,19 +1,19 @@
-import pandas as pd
-import re
-import nltk
-import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd # Pour la manipulation des données
+import re # Pour le Regex
+import nltk # Pour le traitement du langage naturel
+import numpy as np # Pour les calculs numériques
+import matplotlib.pyplot as plt # Pour les graphiques
 from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer # sklearn contient des outils de Machine Learning
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
 # S'assure que les ressources NLTK nécessaires sont téléchargées
 try:
-    nltk.data.find('tokenizers/punkt')
+    nltk.data.find('tokenizers/punkt') 
     nltk.data.find('corpora/wordnet')
 except LookupError:
     print(">> NLTK...")
@@ -24,13 +24,13 @@ except LookupError:
     nltk.download('omw-1.4') # Plusieurs langues pour WordNet
 
 class TextMiner:
-    def __init__(self, file_path, column_name='description_clean', ngram_type='unigram', normalization='lemmatization'):
+    def __init__(self, file_path, column_name='description_clean', ngram_type='unigram', normalization='lemmatization'): 
         self.file_path = file_path
         self.column_name = column_name
         self.ngram_type = ngram_type
         self.normalization = normalization
         
-        # Choix entre Lemmantisation et Racinisation
+        # Choix entre Lemmantisation et Racinisation, la lemmantisation transforme un mot à sa forme de dictionnaire, la racinisation coupe le mot à sa racine
         if self.normalization == 'stemming':
             self.stemmer = PorterStemmer()
         elif self.normalization == 'lemmatization':
@@ -67,19 +67,19 @@ class TextMiner:
         cleaned = [] # Liste des mots nettoyés
 
         for t in tokens:
-            if t not in self.stop_words and len(t) > 2:
-                if self.normalization == 'stemming':
-                    word_final = self.stemmer.stem(t)
+            if t not in self.stop_words and len(t) > 2: # Ignore les stop words et les mots de moins de 3 caractères
+                if self.normalization == 'stemming': 
+                    word_final = self.stemmer.stem(t) # Racinisation
                 elif self.normalization == 'lemmatization':
-                    word_final = self.lemmatizer.lemmatize(t)
+                    word_final = self.lemmatizer.lemmatize(t) # Lemmantisation
                 else:
                     word_final = t
-                cleaned.append(word_final)
+                cleaned.append(word_final) # Ajoute le mot racinisé/lemmantisé à la liste
 
         return " ".join(cleaned) # Retourne sous forme de chaîne
 
     def load_and_process(self):
-        print(f"\n1. Loading & Pre-Process({self.normalization.upper()})")
+        print(f"\n1. Loading & Pre-Process({self.normalization.upper()})") 
         try:
             self.df = pd.read_excel(self.file_path) # Charge le fichier Excel
         except FileNotFoundError:
@@ -94,9 +94,9 @@ class TextMiner:
 
     def show_word_frequencies(self): # Affiche les 20 mots les plus fréquents et génère le nuage de mots
         print(f"\n2. Frequency Analysis ({self.ngram_type.upper()})")
-        if self.ngram_type == 'trigram': n_range = (3, 3)
-        elif self.ngram_type == 'bigram': n_range = (2, 2)
-        else: n_range = (1, 1) # Choix des n-grammes utilisés pour l'analsyse
+        if self.ngram_type == 'trigram': n_range = (3, 3) # Choix des n-grammes utilisés pour l'analyse (trigram)
+        elif self.ngram_type == 'bigram': n_range = (2, 2) # Choix des n-grammes utilisés pour l'analyse (bigram)
+        else: n_range = (1, 1) # Choix des n-grammes utilisés pour l'analyse (unigram)
 
         cv = CountVectorizer(ngram_range=n_range, min_df=2) # Compte le nombre d'occurrences
         X = cv.fit_transform(self.df['processed_text']) 
@@ -106,16 +106,16 @@ class TextMiner:
         words_freq = sorted(words_freq, key=lambda x: x[1], reverse=True) # Total des colonnes pour avoir le total des occurences
         
         print("\n>> Top 20 Most Frequent Words:")
-        for word, freq in words_freq[:20]:
+        for word, freq in words_freq[:20]: # Affiche les 20 mots les plus fréquents
             print(f"   - {word}: {freq}")
 
         # Génération du nuage de mots
-        wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(dict(words_freq))
-        plt.figure(figsize=(10, 5))
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis('off')
-        plt.title(f"Nuage de Mots ({self.ngram_type} - {self.normalization})")
-        plt.show()
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(dict(words_freq)) #On initialise la toile de pixels 800*400 et on demande un fond blanc
+        plt.figure(figsize=(10, 5)) # Taille de la figure peinte sur matplotlib
+        plt.imshow(wordcloud, interpolation='bilinear') #pour un rendu plus lisse, plus net
+        plt.axis('off') # Pas d'axes pour le nuage de mots
+        plt.title(f"Nuage de Mots ({self.ngram_type} - {self.normalization})") # Titre du graphique
+        plt.show() # Affiche le nuage de mots
 
     def vectorize_tfidf_manual(self, n_docs=5):
         print(f"\n3. TF-IDF Vectorization")
