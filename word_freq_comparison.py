@@ -71,12 +71,10 @@ def compare_multiple_documents(file_list):
         print(f"=== CHEVAUCHEMENT GLOBAL (Commun aux 3) ===")
         print(f"   -> Global Overlap: {global_score * 100:.2f}%")
 
-# --- Exécution ---
-
 files_to_compare = [
     'word_frequencies_products_patagonia.xlsx',
     'word_frequencies_products_ecoalf.xlsx',
-    'word_frequencies_products_northface.xlsx' # Exemple de 3ème fichier
+    'word_frequencies_products_armedangels.xlsx' # Exemple de 3ème fichier
 ]
 
 compare_multiple_documents(files_to_compare)
