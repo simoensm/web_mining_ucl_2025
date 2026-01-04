@@ -84,7 +84,7 @@ def convertir_pdf_en_txt_propre(chemin_pdf, chemin_sortie, langue='english'):
 if __name__ == "__main__":
     # Nom exact du fichier téléchargé
     input_file = ".armedangels/Social-plan-link-8.pdf" 
-    output_file = "raport_armedangels_2021.txt"
+    output_file = "report_armedangels_2021.txt"
     
     # Le rapport est en anglais, on utilise donc 'english'
     convertir_pdf_en_txt_propre(input_file, output_file, langue='english')
