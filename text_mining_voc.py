@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.util import ngrams 
+
 try:
     nltk.data.find('tokenizers/punkt')
     nltk.data.find('corpora/wordnet')
@@ -23,7 +24,6 @@ class ProductAnalyzer:
         self.ngram_type = ngram_type
         self.normalization = normalization
         
-        # Initialize Normalizers
         if self.normalization == 'stemming':
             self.stemmer = PorterStemmer()
         elif self.normalization == 'lemmatization':
@@ -31,7 +31,7 @@ class ProductAnalyzer:
         
         self.stop_words = set(stopwords.words('english'))
         
-        # Keywords Dictionary
+        # Détermination du vocabulaire par catégorie
         self.categories_keywords = {
             'ESG_DURABILITE': {
                 'activism', 'bcome', 'biosoft', 'blended', 'bluesign', 'carbon', 
@@ -142,9 +142,9 @@ class ProductAnalyzer:
         
         return cleaned
 
-    def classify_token(self, token):
+    def classify_token(self, token): # Vérifie à quelle catégorie appartient le token
 
-        if isinstance(token, tuple):
+        if isinstance(token, tuple): # Pour bigrams et trigrams
             token = " ".join(token)
             
         if token in self.categories_keywords['ESG_DURABILITE']:
@@ -153,7 +153,7 @@ class ProductAnalyzer:
             return 'TECHNIQUE_PHYSIQUE'
         if token in self.categories_keywords['MATERIAUX_TEXTILES']:
             return 'MATERIAUX_TEXTILES'
-        return 'OTHER'
+        return 'OTHER' # Catégorie par défaut
 
     def run_analysis(self):
         print("\nLoading Data...")
@@ -163,7 +163,6 @@ class ProductAnalyzer:
             print(f"Error: File '{self.file_path}' not found.")
             return
             
-        # Check if column exists
         if self.column_name not in df.columns:
             print(f"Error: Column '{self.column_name}' not found in Excel file.")
             print(f"Available columns: {list(df.columns)}")
@@ -175,11 +174,10 @@ class ProductAnalyzer:
         results = []
 
         for index, row in df.iterrows():
-            # Get and preprocess text -> NOW RETURNS A LIST
+
             tokens = self.preprocess(row[self.column_name])
             total_items = len(tokens)
             
-            # Initialize counters
             counts = {
                 'ESG_DURABILITE': 0,
                 'TECHNIQUE_PHYSIQUE': 0,
@@ -187,13 +185,12 @@ class ProductAnalyzer:
                 'OTHER': 0
             }
             
-            # Count words per category
+            
             for token in tokens:
                 category = self.classify_token(token)
                 counts[category] += 1
-            
-            # Calculate percentages
-            if total_items > 0:
+          
+            if total_items > 0: # Calcule les pourcentage d'appartenance aux catégories
                 pct_esg = (counts['ESG_DURABILITE'] / total_items) * 100
                 pct_tech = (counts['TECHNIQUE_PHYSIQUE'] / total_items) * 100
                 pct_mat = (counts['MATERIAUX_TEXTILES'] / total_items) * 100
@@ -201,7 +198,7 @@ class ProductAnalyzer:
             else:
                 pct_esg = pct_tech = pct_mat = pct_other = 0.0
 
-            # Prepare row output
+    
             product_name = row['name'] if 'name' in row else f"Product_{index}"
             source_file = row['source_file'] if 'source_file' in row else "Unknown"
 
@@ -228,7 +225,7 @@ class ProductAnalyzer:
             ].mean().reset_index()
             print(summary_df.round(2))
         
-        output_file = "patagonia_products_category_analysis.xlsx"
+        output_file = "ecoalf_products_category_analysis.xlsx" # à remplacer
         result_df.to_excel(output_file, index=False)
         
         print("\n--- ANALYSIS COMPLETE ---")
@@ -249,7 +246,7 @@ if __name__ == "__main__":
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    file_path = '.patagonia/patagonia_dataset.xlsx'
+    file_path = '.ecoalf/ecoalf_dataset.xlsx' # à remplacer
     
     analyzer = ProductAnalyzer(
         file_path=file_path, 

@@ -4,7 +4,6 @@ from playwright.async_api import async_playwright #Encore une fois, nous utiliso
 from bs4 import BeautifulSoup  #Nécessaire pour analyser le HTML et extraire les informations.
 import os
 
-# --- CONFIGURATION ---
 INPUT_FILE = ".patagonia/patagonia_women_links.txt" #Nom du fichier contenant les liens à scraper
 OUTPUT_FILE = ".patagonia/patagonia_women_products.xlsx" #Nom du fichier Excel de sortie
 

@@ -1,8 +1,7 @@
 import asyncio
 from playwright.async_api import async_playwright
 
-# --- CONFIGURATION ---
-TARGET_URL = "https://ecoalf.com/en/collections/hombre" # or mujer
+TARGET_URL = "https://ecoalf.com/en/collections/hombre" # mujer
 OUTPUT_FILE = ".ecoalf/ecoalf_men_links.txt" # womens
 
 async def harvest_links():
@@ -14,10 +13,7 @@ async def harvest_links():
         print(f"--- 1. Navigate to {TARGET_URL} ---")
         await page.goto(TARGET_URL, timeout=60000, wait_until="domcontentloaded")
         
-        # Cookie Management
         try:
-            # Ecoalf usually has a cookie banner. Common selector: #onetrust-accept-btn-handler or similar generic buttons
-            # We try a generic 'Accept' or 'Allow' text search if ID fails
             cookie_btn = page.locator("#onetrust-accept-btn-handler, button:has-text('Accept'), button:has-text('Allow All')")
             if await cookie_btn.count() > 0:
                 await cookie_btn.first.click(timeout=3000)
@@ -32,18 +28,15 @@ async def harvest_links():
         while True:
             await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             await asyncio.sleep(2)
-            
-            # Click "Load More" / "View More" button
-            # Ecoalf often uses text "View More" or "Load More"
+
             load_more = page.locator('text=/View More|Load More/i')
             if await load_more.count() > 0 and await load_more.first.is_visible():
                 try:
                     await load_more.first.click(force=True)
                     await asyncio.sleep(2)
-                    retries = 0 # Reset retries if we successfully clicked
+                    retries = 0
                 except: pass
-            
-            # Count current products to check progress
+
             current_count = await page.locator('a[href*="/products/"]').count()
             
             if current_count > previous_count:
@@ -63,7 +56,6 @@ async def harvest_links():
             "elements => elements.map(e => e.href)"
         )
         
-        # Simple deduplication by URL (cleaning query params)
         unique_links = sorted(list(set([link.split('?')[0] for link in raw_links])))
         
         print(f"   > Found {len(unique_links)} unique products.")
