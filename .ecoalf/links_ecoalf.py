@@ -2,7 +2,7 @@ import asyncio
 from playwright.async_api import async_playwright
 
 TARGET_URL = "https://ecoalf.com/en/collections/hombre" # mujer
-OUTPUT_FILE = ".ecoalf/ecoalf_men_links.txt" # womens
+OUTPUT_FILE = ".ecoalf/ecoalf_men_links.txt" # women
 
 async def harvest_links():
     async with async_playwright() as p:
