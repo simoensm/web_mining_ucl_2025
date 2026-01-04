@@ -4,8 +4,8 @@ from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 import os
 
-INPUT_FILE = ".ecoalf/ecoalf_men_links.txt"
-OUTPUT_FILE = ".ecoalf/ecoalf_men_products.xlsx"
+INPUT_FILE = ".ecoalf/ecoalf_women_links.txt"
+OUTPUT_FILE = ".ecoalf/ecoalf_women_products.xlsx"
 
 async def get_raw_description(soup):
     """Extracts product details and sustainability info from accordions."""
