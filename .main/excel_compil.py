@@ -4,7 +4,7 @@ import glob # Pour la recherche de fichiers
 import os
 
 FILE_TYPE = 'xlsx'  #Type de fichier à traiter ('xlsx' ou 'csv')
-OUTPUT_FILENAME = 'all_products.xlsx' #Nom du fichier de sortie
+OUTPUT_FILENAME = 'all_patagonia_products.xlsx' #Nom du fichier de sortie
 
 def merge_files():
     search_pattern = f"*.{FILE_TYPE}" 

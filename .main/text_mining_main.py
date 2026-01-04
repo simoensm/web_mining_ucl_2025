@@ -1,3 +1,5 @@
+
+
 import pandas as pd # Pour la manipulation des données
 import re # Pour le Regex
 import nltk # Pour le traitement du langage naturel
@@ -10,6 +12,7 @@ from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import CountVectorizer # sklearn contient des outils de Machine Learning
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score
 
 # S'assure que les ressources NLTK nécessaires sont téléchargées
 try:
@@ -43,7 +46,7 @@ class TextMiner:
             'intro', 'details', 'specs', 'features', 'materials', 'care', 'instructions',
             'weight', 'country', 'origin', 'made', 'factory', 'certified',
             'machine', 'wash', 'warm', 'cold', 'bleach', 'dry', 'tumble', 'iron',
-            'oz', 'g', 'lbs', 'premium', 'product', 'regular', 'fit', 'size', 'color'
+            'oz', 'g', 'lbs', 'premium', 'product', 'regular', 'fit', 'size', 'color', 'cool', 'intentionally', 'saying'
         }
         self.stop_words.update(noise_words) # Ajout des mots "bruit" à la liste des stop words
         
@@ -125,7 +128,7 @@ class TextMiner:
         else: n_range = (1, 1)
 
         
-        self.vectorizer = CountVectorizer(ngram_range=n_range, min_df=3, max_df=0.85) # Compte le nombre de mots
+        self.vectorizer = CountVectorizer(ngram_range=n_range, min_df=2, max_df=0.65) # Compte le nombre de mots
         # min_df=3 : ignore les mots qui apparaissent dans moins de 3 documents (trop rares)
         # max_df=0.85 : ignore les mots qui apparaissent dans plus de 85% des documents (trop communs)
 
@@ -212,6 +215,14 @@ class TextMiner:
         self.kmeans_model.fit(self.tfidf_matrix)
         self.df['cluster'] = self.kmeans_model.labels_
         
+        # Calcul du Silhouette Score pour évaluer la qualité du clustering
+        if n_clusters > 1:
+            sil_score = silhouette_score(self.tfidf_matrix, self.kmeans_model.labels_)
+            print(f"\n   > Silhouette Score: {sil_score:.4f}")
+            print(f"   > (Score between -1 and 1: closer to 1 = better clustering)")
+        else:
+            print("\n   > Silhouette Score requires at least 2 clusters.")
+        
         order_centroids = self.kmeans_model.cluster_centers_.argsort()[:, ::-1] # Mots clés par cluster
         
         for i in range(n_clusters):
@@ -256,7 +267,7 @@ if __name__ == "__main__":
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    miner = TextMiner('all_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) # à remplacer
+    miner = TextMiner('.patagonia/patagonia_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) # à remplacer
 
     if miner.load_and_process():
         miner.show_word_frequencies()
@@ -270,7 +281,7 @@ if __name__ == "__main__":
         
         miner.perform_clustering(n_clusters=k)
         
-        output_name = f"all_products_clustered_{ngram_mode}.xlsx" # à remplacer
+        output_name = f".patagonia/patagonia_products_clustered_{ngram_mode}.xlsx" # à remplacer
         miner.save_results(output_name)
         
         miner.visualize_pca()
