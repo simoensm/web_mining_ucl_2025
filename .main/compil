@@ -2,13 +2,14 @@ import pandas as pd
 import os
 
 # --- CONFIGURATION MANUELLE ---
-# Notez ici les noms exacts de vos fichiers présents dans votre dossier VS Code
+# Noms exacts des fichiers 
 FILES_TO_MERGE = [
-    '.patagonia/patagonia_men_products.xlsx',
-    '.patagonia/patagonia_women_products.xlsx',
+    '.armedangels/armedangels_dataset.xlsx',
+    '.ecoalf/ecoalf_dataset.xlsx',
+    '.patagonia/patagonia_dataset.xlsx'
 ]
 
-OUTPUT_FILENAME = '.patagonia/all_patagonia_products.xlsx'
+OUTPUT_FILENAME = 'all_products_combined.xlsx'
 
 def merge_manual_files():
     all_data_frames = []

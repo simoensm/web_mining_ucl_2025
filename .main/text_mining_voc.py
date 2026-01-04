@@ -246,7 +246,7 @@ if __name__ == "__main__":
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    file_path = '.patagonia/patagonia_dataset.xlsx' # à remplacer
+    file_path = 'all_products_combined.xlsx' # à remplacer
     
     analyzer = ProductAnalyzer(
         file_path=file_path, 
