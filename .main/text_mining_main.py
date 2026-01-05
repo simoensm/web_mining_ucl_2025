@@ -264,7 +264,7 @@ class TextMiner:
         
         self.cosine_sim = cosine_similarity(self.tfidf_matrix)
         print(f"   > Cosine similarity matrix computed: {self.cosine_sim.shape}")
-        
+          
         # Export optionnel de la matrice de similarité
         if export:
             print(f"   > Exporting similarity matrix to {output_file}...")

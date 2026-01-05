@@ -1,4 +1,6 @@
+from turtle import pd
 import numpy as np
+import pandas as pd
 from graph_matrices_completed import (
     degree_matrix,
     laplacian_pseudoinverse,
@@ -6,7 +8,15 @@ from graph_matrices_completed import (
 
 
 def common_neighbors_matrix(A: np.ndarray) -> np.ndarray:
+
     CN = A@A*degree_matrix(A)
+    CN = np.zeros_like(A, dtype=float)
+    n = A.shape[0]
+    for i in range(n):
+        for j in range(n):
+            prod = 0.0
+            for k in range(n):
+                prod += A
     return CN
 
 def preferential_attachment_matrix(A: np.ndarray) -> np.ndarray:
@@ -27,17 +37,22 @@ def cosine_similarity_matrix(A: np.ndarray) -> np.ndarray:
 
 
 def dice_similarity_matrix(A: np.ndarray) -> np.ndarray:
-    intersection = np.dot(A, A.T)
-    numerator = 2 * intersection
     
-    CN = degree_matrix(A, "out")
-    d = np.diag(CN)
-    
-    deno = d[:, None] + d[None, :]
+    num = np.zeros_like(A)
+    denum = np.zeros_like(A)
 
-    similarity = numerator / deno
-    
-    return similarity
+    d_out = np.diag(degree_matrix(A, "out"))
+    d_in = np.diag(degree_matrix(A, "in"))
+    n = A.shape[0]
+    for i in range(n):
+        for j in range(n):
+            common_neighbors = 0
+            for k in range(n):
+                prod += A[i, k] * A[j, k]
+            num[i, j] = prod
+            denum[i, j] = d_out[i] + d_in[j]
+    Jaccard = num/denum
+    return Jaccard
 
 
 def jaccard_similarity_matrix(A: np.ndarray) -> np.ndarray:
@@ -112,18 +127,11 @@ def commute_time_matrix(A: np.ndarray) -> np.ndarray:
 
 
 if __name__ == "__main__":
-    A = np.array([
-        [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-        [1, 0, 1, 1, 0, 0, 1, 0, 0, 0],
-        [1, 1, 0, 1, 1, 0, 1, 0, 0, 0],
-        [1, 1, 1, 0, 1, 0, 0, 0, 0, 0],
-        [1, 0, 1, 1, 0, 0, 1, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-        [0, 1, 1, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-        [0, 0, 0, 0, 1, 1, 0, 1, 0, 1],
-        [0, 0, 0, 0, 0, 1, 0, 1, 1, 0]
-    ], int)
+
+    nom_fichier = '.patagonia/similarity_matrix_unigram.xlsx'
+    df = pd.read_excel(nom_fichier, index_col=0, engine='openpyxl')
+    A = df.values
+    print(A)
 
     print("Common neighbors :\n", common_neighbors_matrix(A))
     print("Preferential attachment index:\n", preferential_attachment_matrix(A))

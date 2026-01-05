@@ -1,3 +1,6 @@
+from turtle import pd
+import numpy as np
+import pandas as pd
 import numpy as np
 
 def degree_matrix(A: np.ndarray, direction: str = "out") -> np.ndarray:
@@ -42,12 +45,18 @@ def transition_matrix(A: np.ndarray, direction: str = "out") -> np.ndarray:
     direction : str, optional
         'out' for transitions based on outgoing links (default)
     """
-    P = np.zeros_like(A, dtype=float)
 
-    D = degree_matrix(A, "out")
-    Z = D > 0
-    P = A/Z 
-    return(P)
+    D = degree_matrix(A, direction)
+    deg = np.diag(D)
+    P = np.zeros_like(A) 
+    
+    for i, d in enumerate(deg):
+        if d > 0:
+            P[i, :] = A[i, :] / d
+    
+    P = np.linalg.inv(D) @ A
+
+    return P
 
 
 
@@ -105,17 +114,12 @@ if __name__ == "__main__":
     #     [0, 0, 0, 0, 0, 1, 0, 1, 1, 0]
     # ], int)
     
-    A = np.array([
-        [0, 1, 1, 0, 0, 0, 0],
-        [1, 0, 1, 0, 0, 0, 0],
-        [1, 1, 0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 1, 0, 0],
-        [0, 0, 0, 1, 0, 1, 1],
-        [0, 0, 0, 0, 1, 0, 1],
-        [0, 0, 0, 0, 1, 1, 0]
-    ], int)
+    nom_fichier = '.patagonia/similarity_matrix_unigram.xlsx'
+    df = pd.read_excel(nom_fichier, index_col=0, engine='openpyxl')
 
-    print("Adjacency matrix A =\n", A)
+    A = df.values
+
+    print("Similarity matrix A =\n", A)
 
     # Degree matrices
     D_out = degree_matrix(A, "out")
