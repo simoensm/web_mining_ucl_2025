@@ -112,6 +112,6 @@ if __name__ == "__main__":
     [0, 0, 0, 0, 0, 1, 0, 1, 1, 0]],int)
 
     print("Closeness:\n", np.round(closeness_centrality(A), 4))
-    print("Residual closeness:\n", np.round(residual_closeness_centrality(A_RC), 4))
+    print("Residual closeness:\n", np.round(residual_closeness_centrality(A), 4))
     print("Eccentricity:\n", eccentricity_centrality(A))
     print("Radius:\n", graph_radius(A))
