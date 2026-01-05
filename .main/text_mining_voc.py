@@ -118,10 +118,6 @@ class ProductAnalyzer:
     def preprocess(self, text):
         if pd.isna(text) or text == "":
             return []
-            
-        text = str(text).lower()
-        text = re.sub(r'[^\w\s]', '', text)
-        text = re.sub(r'\d+', '', text)
         tokens = word_tokenize(text)
         
         cleaned = []

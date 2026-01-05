@@ -256,7 +256,7 @@ class TextMiner:
         plt.grid(True, linestyle='--', alpha=0.3)
         plt.show()
 
-    def compute_cosine_similarity(self):
+    def compute_cosine_similarity(self, export=False, output_file='similarity_matrix.xlsx'):
         print("\n8. Computing Cosine Similarity Matrix")
         if self.tfidf_matrix is None:
             print("   > Error: TF-IDF matrix not computed. Run vectorize_tfidf_manual() first.")
@@ -264,6 +264,22 @@ class TextMiner:
         
         self.cosine_sim = cosine_similarity(self.tfidf_matrix)
         print(f"   > Cosine similarity matrix computed: {self.cosine_sim.shape}")
+        
+        # Export optionnel de la matrice de similarité
+        if export:
+            print(f"   > Exporting similarity matrix to {output_file}...")
+            if 'name' in self.df.columns:
+                labels = self.df['name'].tolist()
+            else:
+                labels = [f"Doc_{i}" for i in range(len(self.df))]
+            
+            sim_df = pd.DataFrame(self.cosine_sim, index=labels, columns=labels)
+            try:
+                sim_df.to_excel(output_file)
+                print(f"   > Similarity matrix exported successfully: {output_file}")
+            except Exception as e:
+                print(f"   > Error exporting similarity matrix: {e}")
+        
         return self.cosine_sim
 
     def export_to_gephi(self, output_dir='.', name_column='name', similarity_threshold=0.20):
