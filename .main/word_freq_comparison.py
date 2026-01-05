@@ -1,7 +1,7 @@
 import pandas as pd
 
 df1 = pd.read_excel('.patagonia/token_frequencies_patagonia_unigram.xlsx') # Produits
-df2 = pd.read_excel('.patagonia/frequencies_patagonia_unigram.xlsx') # Rapport
+df2 = pd.read_excel('.patagonia/report_frequencies_patagonia_unigram.xlsx') # Rapport
 
 total_mots_doc1 = df1['frequency'].sum() #somme des fréquences du doc 1
 total_mots_doc2 = df2['frequency'].sum() #somme des fréquences du doc 2

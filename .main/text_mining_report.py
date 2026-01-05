@@ -157,5 +157,5 @@ if __name__ == "__main__":
     ) 
 
     if miner.load_and_process(): # Si le chargement et le traitement sont réussis
-        output_filename = f"report_frequencies_patagonia_{ngram_mode}.xlsx" # Nom du fichier de sortie
+        output_filename = f".patagonia/report_frequencies_patagonia_{ngram_mode}.xlsx" # Nom du fichier de sortie
         miner.export_token_frequencies(output_file=output_filename) 
