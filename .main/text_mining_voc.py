@@ -1,11 +1,11 @@
-import pandas as pd
-import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-from nltk.tokenize import word_tokenize
-from nltk.util import ngrams 
-
+import pandas as pd #Pour les tables de données
+import re #Pour le Regex
+import nltk 
+from nltk.corpus import stopwords #Pour les stopwords pré-définis
+from nltk.stem import PorterStemmer, WordNetLemmatizer #Pour le stemming et lemmatization
+from nltk.tokenize import word_tokenize #Pour la tokenization
+from nltk.util import ngrams #Pour les n-grams
+#S'assure que toutes les ressources NLTK nécessaires sont téléchargées
 try:
     nltk.data.find('tokenizers/punkt')
     nltk.data.find('corpora/wordnet')
@@ -16,22 +16,22 @@ except LookupError:
     nltk.download('punkt_tab')
     nltk.download('wordnet')
     nltk.download('omw-1.4')
-
+# Classe principale pour l'analyse des produits
 class ProductAnalyzer:
-    def __init__(self, file_path, column_name='description_clean', ngram_type='unigram', normalization='lemmatization'):
-        self.file_path = file_path
+    def __init__(self, file_path, column_name='description_clean', ngram_type='unigram', normalization='lemmatization'): #Initialisation des paramètres
+        self.file_path = file_path      
         self.column_name = column_name
-        self.ngram_type = ngram_type
-        self.normalization = normalization
+        self.ngram_type = ngram_type #On travaille en unigram 
+        self.normalization = normalization #On travaille en lemmatization car cela fait plus de sens et c'est plus précis
         
         if self.normalization == 'stemming':
             self.stemmer = PorterStemmer()
         elif self.normalization == 'lemmatization':
-            self.lemmatizer = WordNetLemmatizer()
+            self.lemmatizer = WordNetLemmatizer() #Initialisation du lemmatizer, ce qu'on fait ici
         
-        self.stop_words = set(stopwords.words('english'))
+        self.stop_words = set(stopwords.words('english')) #Utilisation des stopwords en anglais
         
-        # Détermination du vocabulaire par catégorie
+        # Détermination du vocabulaire par catégorie : les mots qu'on va enlever dans chacune des catégories
         self.categories_keywords = {
             'ESG_DURABILITE': {
                 'activism', 'bcome', 'biosoft', 'blended', 'bluesign', 'carbon', 
@@ -115,7 +115,7 @@ class ProductAnalyzer:
             }
         }
 
-    def preprocess(self, text):
+    def preprocess(self, text): # Prétraitement du texte : tokenization,normalisation, choix des n-grams
         if pd.isna(text) or text == "":
             return []
         tokens = word_tokenize(text)
@@ -143,48 +143,48 @@ class ProductAnalyzer:
         if isinstance(token, tuple): # Pour bigrams et trigrams
             token = " ".join(token)
             
-        if token in self.categories_keywords['ESG_DURABILITE']:
+        if token in self.categories_keywords['ESG_DURABILITE']: #Vérifie si le token est dans la catégorie ESG_DURABILITE
             return 'ESG_DURABILITE'
-        if token in self.categories_keywords['TECHNIQUE_PHYSIQUE']:
+        if token in self.categories_keywords['TECHNIQUE_PHYSIQUE']: #Vérifie si le token est dans la catégorie TECHNIQUE_PHYSIQUE
             return 'TECHNIQUE_PHYSIQUE'
-        if token in self.categories_keywords['MATERIAUX_TEXTILES']:
+        if token in self.categories_keywords['MATERIAUX_TEXTILES']: #Vérifie si le token est dans la catégorie MATERIAUX_TEXTILES
             return 'MATERIAUX_TEXTILES'
         return 'OTHER' # Catégorie par défaut
 
-    def run_analysis(self):
+    def run_analysis(self): #Exécute l'analyse principale
         print("\nLoading Data...")
         try:
             df = pd.read_excel(self.file_path)
         except FileNotFoundError:
-            print(f"Error: File '{self.file_path}' not found.")
+            print(f"Error: File '{self.file_path}' not found.") #Gestion d'erreur si le fichier n'est pas trouvé
             return
             
         if self.column_name not in df.columns:
-            print(f"Error: Column '{self.column_name}' not found in Excel file.")
+            print(f"Error: Column '{self.column_name}' not found in Excel file.") #Gestion d'erreur si la colonne n'est pas trouvée
             print(f"Available columns: {list(df.columns)}")
             return
 
-        df = df.dropna(subset=[self.column_name]).reset_index(drop=True)
+        df = df.dropna(subset=[self.column_name]).reset_index(drop=True) #Supprime les lignes avec des valeurs manquantes dans la colonne spécifiée
         print(f"Processing {len(df)} products...")
 
-        results = []
+        results = [] #Liste pour stocker les résultats de chaque produit
 
-        for index, row in df.iterrows():
+        for index, row in df.iterrows(): 
 
-            tokens = self.preprocess(row[self.column_name])
-            total_items = len(tokens)
+            tokens = self.preprocess(row[self.column_name]) 
+            total_items = len(tokens) #Nombre total de tokens après prétraitement
             
             counts = {
                 'ESG_DURABILITE': 0,
                 'TECHNIQUE_PHYSIQUE': 0,
                 'MATERIAUX_TEXTILES': 0,
                 'OTHER': 0
-            }
+            } #Initialisation des compteurs pour chaque catégorie
             
             
             for token in tokens:
                 category = self.classify_token(token)
-                counts[category] += 1
+                counts[category] += 1 #Incrémente le compteur de la catégorie correspondante
           
             if total_items > 0: # Calcule les pourcentage d'appartenance aux catégories
                 pct_esg = (counts['ESG_DURABILITE'] / total_items) * 100
@@ -192,11 +192,11 @@ class ProductAnalyzer:
                 pct_mat = (counts['MATERIAUX_TEXTILES'] / total_items) * 100
                 pct_other = (counts['OTHER'] / total_items) * 100
             else:
-                pct_esg = pct_tech = pct_mat = pct_other = 0.0
+                pct_esg = pct_tech = pct_mat = pct_other = 0.0 #Évite la division par zéro
 
     
-            product_name = row['name'] if 'name' in row else f"Product_{index}"
-            source_file = row['source_file'] if 'source_file' in row else "Unknown"
+            product_name = row['name'] if 'name' in row else f"Product_{index}" #Nom du produit
+            source_file = row['source_file'] if 'source_file' in row else "Unknown" #Nom du fichier source
 
             results.append({
                 'Product Name': product_name,
@@ -210,19 +210,19 @@ class ProductAnalyzer:
                 'Material (%)': round(pct_mat, 2),
                 'Other (Count)': counts['OTHER'],
                 'Other (%)': round(pct_other, 2)
-            })
+            }) #Ajoute les résultats du produit à la liste
 
-        result_df = pd.DataFrame(results)
+        result_df = pd.DataFrame(results) #Convertit la liste des résultats en tableau 
         
-        print("\nAverage Scores Per source_file")
+        print("\nAverage Scores Per source_file") # Affiche les scores moyens par fichier source
         if 'Source File' in result_df.columns:
             summary_df = result_df.groupby('Source File')[
-                ['ESG (%)', 'Technical (%)', 'Material (%)', 'Other (%)']
+                ['ESG (%)', 'Technical (%)', 'Material (%)', 'Other (%)'] #Calcule la moyenne des pourcentages par fichier source
             ].mean().reset_index()
-            print(summary_df.round(2))
+            print(summary_df.round(2)) #Arrondit les valeurs à 2 décimales pour une meilleure lisibilité
         
         output_file = "all_products_category_analysis.xlsx" # à remplacer
-        result_df.to_excel(output_file, index=False)
+        result_df.to_excel(output_file, index=False) #Export des résultats dans un fichier Excel
         
         print("\n--- ANALYSIS COMPLETE ---")
         print(f">> Results saved to: {output_file}")
@@ -230,12 +230,12 @@ class ProductAnalyzer:
 if __name__ == "__main__":
     print("\nCONFIGURATION")
     
-    print("1. Lemmatization")
+    print("1. Lemmatization") #Choix entre Lemmatisation et Racinisation
     print("2. Stemming")
     norm_choice = input("Choice (1/2) : ").strip()
     norm_mode = 'lemmatization' if norm_choice == '1' else 'stemming'
 
-    print("\n1. Unigram (Single words)")
+    print("\n1. Unigram (Single words)") #Choix du type de n-gram
     print("2. Bigram (Pairs of words)")
     print("3. Trigram (Groups of 3)")
     ngram_choice = input("Choice (1/2/3) : ").strip()
@@ -249,8 +249,8 @@ if __name__ == "__main__":
         column_name='description_clean',
         ngram_type=ngram_mode, 
         normalization=norm_mode
-    )
+    ) #Initialisation de l'analyseur de produits
     
-    analyzer.run_analysis()
+    analyzer.run_analysis() #Exécution de l'analyse
     
     print("\nFINISHED")
