@@ -216,14 +216,14 @@ class TextMiner:
 
     def perform_clustering(self, n_clusters):
         print(f"\n5. Clustering (K={n_clusters})")
-        self.kmeans_model = KMeans(n_clusters=n_clusters, init='k-means++', max_iter=300, n_init=10, random_state=42) # Application de K-Means
-        self.kmeans_model.fit(self.tfidf_matrix)
-        self.df['cluster'] = self.kmeans_model.labels_
+        self.kmeans_model = KMeans(n_clusters=n_clusters, init='k-means++', max_iter=300, n_init=10, random_state=42) # Application dU K-Means
+        self.kmeans_model.fit(self.tfidf_matrix) #Entraîne le modèle K-Means sur la matrice TF-IDF
+        self.df['cluster'] = self.kmeans_model.labels_ #Ajoute les labels de cluster au DataFrame original
         
         # Calcul du Silhouette Score pour évaluer la qualité du clustering
         if n_clusters > 1:
-            sil_score = silhouette_score(self.tfidf_matrix, self.kmeans_model.labels_)
-            print(f"\n   > Silhouette Score: {sil_score:.4f}")
+            sil_score = silhouette_score(self.tfidf_matrix, self.kmeans_model.labels_)  #Calcule le score de silhouette
+            print(f"\n   > Silhouette Score: {sil_score:.4f}") # Affiche le score de silhouette avec 4 décimales
         else:
             print("\n   > Minimum : 2 clusters.")
         
@@ -249,49 +249,49 @@ class TextMiner:
         pca = PCA(n_components=2, random_state=42)
         coords = pca.fit_transform(self.tfidf_matrix)
         
-        plt.figure(figsize=(10, 6))
-        scatter = plt.scatter(coords[:, 0], coords[:, 1], c=self.df['cluster'], cmap='viridis', alpha=0.6)
-        plt.colorbar(scatter, label='Cluster ID')
-        plt.title('PCA Projection (based on manual TF-IDF)')
-        plt.grid(True, linestyle='--', alpha=0.3)
-        plt.show()
+        plt.figure(figsize=(10, 6)) # Taille de la figure
+        scatter = plt.scatter(coords[:, 0], coords[:, 1], c=self.df['cluster'], cmap='viridis', alpha=0.6) # Nuage de points coloré par cluster, cmap 'viridis' pour une bonne visibilité, alpha pour la transparence
+        plt.colorbar(scatter, label='Cluster ID') # Barre de couleur pour indiquer les clusters
+        plt.title('PCA Projection (based on manual TF-IDF)') # Titre du graphique
+        plt.grid(True, linestyle='--', alpha=0.3) # Grille pour une meilleure lisibilité
+        plt.show() # Affiche le graphique
 
-    def compute_cosine_similarity(self, export=False, output_file='similarity_matrix.xlsx'):
-        print("\n8. Computing Cosine Similarity Matrix")
-        if self.tfidf_matrix is None:
+    def compute_cosine_similarity(self, export=False, output_file='similarity_matrix.xlsx'): # Calcule la matrice de similarité cosinus
+        print("\n8. Computing Cosine Similarity Matrix") 
+        if self.tfidf_matrix is None: #Vérifie que la matrice TF-IDF est créée
             print("   > Error: TF-IDF matrix not computed. Run vectorize_tfidf_manual() first.")
             return None
         
-        self.cosine_sim = cosine_similarity(self.tfidf_matrix)
-        print(f"   > Cosine similarity matrix computed: {self.cosine_sim.shape}")
+        self.cosine_sim = cosine_similarity(self.tfidf_matrix) #Calcule la similarité cosinus entre tous les documents
+        print(f"   > Cosine similarity matrix computed: {self.cosine_sim.shape}") #Affiche la taille de la matrice
         
         # Export optionnel de la matrice de similarité
         if export:
-            print(f"   > Exporting similarity matrix to {output_file}...")
+            print(f"   > Exporting similarity matrix to {output_file}...") #Export de la matrice de similarité
             if 'name' in self.df.columns:
-                labels = self.df['name'].tolist()
+                labels = self.df['name'].tolist() #Etiquettes basées sur les noms des produits
             else:
-                labels = [f"Doc_{i}" for i in range(len(self.df))]
+                labels = [f"Doc_{i}" for i in range(len(self.df))] #Etiquettes par défaut
             
-            sim_df = pd.DataFrame(self.cosine_sim, index=labels, columns=labels)
-            try:
+            sim_df = pd.DataFrame(self.cosine_sim, index=labels, columns=labels) #Création du tableau pour l'export
+            try: 
                 sim_df.to_excel(output_file)
-                print(f"   > Similarity matrix exported successfully: {output_file}")
+                print(f"   > Similarity matrix exported successfully: {output_file}") #Message de succès
             except Exception as e:
-                print(f"   > Error exporting similarity matrix: {e}")
+                print(f"   > Error exporting similarity matrix: {e}") #Message d'erreur en cas d'échec
         
         return self.cosine_sim
 
-    def export_to_gephi(self, output_dir='.', name_column='name', similarity_threshold=0.20):
+    def export_to_gephi(self, output_dir='.', name_column='name', similarity_threshold=0.20): #Exporte les données pour Gephi
         print(f"\n9. Export to Gephi (Cosine Similarity)")
         
         # Vérification des prérequis
         if self.tfidf_matrix is None:
-            print("   > Error: TF-IDF matrix not computed. Run vectorize_tfidf_manual() first.")
+            print("   > Error: TF-IDF matrix not computed. Run vectorize_tfidf_manual() first.") #Erreur si la matrice TF-IDF n'est pas calculée
             return False
         
         if self.df is None:
-            print("   > Error: Data not loaded. Run load_and_process() first.")
+            print("   > Error: Data not loaded. Run load_and_process() first.") #Erreur si les données ne sont pas chargées
             return False
         
         # Calcul de la similarité cosinus si pas encore fait
@@ -308,25 +308,25 @@ class TextMiner:
         
         # Vérifie si la colonne de noms existe
         if name_column not in self.df.columns:
-            print(f"   > Warning: Column '{name_column}' not found. Using index as label.")
-            labels = [f"Product_{i}" for i in range(len(self.df))]
+            print(f"   > Warning: Column '{name_column}' not found. Using index as label.") #Avertissement si la colonne n'existe pas
+            labels = [f"Product_{i}" for i in range(len(self.df))] #Utilise les indices comme étiquettes si la colonne n'existe pas
         else:
-            labels = self.df[name_column].tolist()
+            labels = self.df[name_column].tolist() #Utilise les noms des produits comme étiquettes
         
         # Création du DataFrame nodes
         nodes_data = {
             'Id': range(len(self.df)),
             'Label': labels
-        }
+        } #Dictionnaire pour les données des nœuds, avec Id et Label
         
         # Ajout du cluster si disponible
         if 'cluster' in self.df.columns:
-            nodes_data['Cluster'] = self.df['cluster'].tolist()
+            nodes_data['Cluster'] = self.df['cluster'].tolist() #Ajoute la colonne de cluster si elle existe
         
-        nodes_df = pd.DataFrame(nodes_data)
-        nodes_file = os.path.join(output_dir, f"gephi_nodes_{self.ngram_type}.csv")
-        nodes_df.to_csv(nodes_file, index=False, encoding='utf-8')
-        print(f"   > Nodes file saved: {nodes_file} ({len(nodes_df)} nodes)")
+        nodes_df = pd.DataFrame(nodes_data) #Création du tableau des nœuds
+        nodes_file = os.path.join(output_dir, f"gephi_nodes_{self.ngram_type}.csv") #Nom du fichier des nœuds
+        nodes_df.to_csv(nodes_file, index=False, encoding='utf-8') #Enregistrement du fichier des nœuds
+        print(f"   > Nodes file saved: {nodes_file} ({len(nodes_df)} nodes)") #Message de succès avec le nombre de nœuds
         
         # --- CRÉATION DU FICHIER EDGES ---
         print(f"   > Generating Edges file (threshold: {similarity_threshold})...")
@@ -335,8 +335,8 @@ class TextMiner:
         upper_tri = np.triu(self.cosine_sim, k=1)
         
         # Trouve les paires avec similarité au-dessus du seuil
-        rows, cols = np.where(upper_tri > similarity_threshold)
-        weights = upper_tri[rows, cols]
+        rows, cols = np.where(upper_tri > similarity_threshold) 
+        weights = upper_tri[rows, cols] #Poids des connexions qui représentent la similarité entre les documents
         
         print(f"   > Found {len(weights)} connections above threshold")
         
@@ -344,133 +344,133 @@ class TextMiner:
         edges_df = pd.DataFrame({
             'Source': rows,
             'Target': cols,
-            'Weight': np.round(weights, 4),  # Arrondi pour lisibilité
+            'Weight': np.round(weights, 4),  # Arrondi à 4 décimales pour la lisibilité
             'Type': 'Undirected'
-        })
+        }) #Dictionnaire pour les données des arêtes, avec Source, Target, Weight et Type (graph non orienté)
         
-        edges_file = os.path.join(output_dir, f"gephi_edges_{self.ngram_type}.csv")
-        edges_df.to_csv(edges_file, index=False, encoding='utf-8')
-        print(f"   > Edges file saved: {edges_file} ({len(edges_df)} edges)")
+        edges_file = os.path.join(output_dir, f"gephi_edges_{self.ngram_type}.csv") #Nom du fichier des arêtes
+        edges_df.to_csv(edges_file, index=False, encoding='utf-8') #Enregistrement du fichier des arêtes
+        print(f"   > Edges file saved: {edges_file} ({len(edges_df)} edges)") #Message de succès avec le nombre d'arêtes
         
         # --- STATISTIQUES DE SIMILARITÉ ---
         print("\n   > Similarity Statistics:")
         if len(weights) > 0:
-            print(f"      - Min similarity: {weights.min():.4f}")
-            print(f"      - Max similarity: {weights.max():.4f}")
+            print(f"      - Min similarity: {weights.min():.4f}") #Affiche les statistiques de similarité (min, max, mean, median)
+            print(f"      - Max similarity: {weights.max():.4f}") 
             print(f"      - Mean similarity: {weights.mean():.4f}")
             print(f"      - Median similarity: {np.median(weights):.4f}")
         else:
-            print("      - No connections found above threshold.")
+            print("      - No connections found above threshold.") #Si aucune connexion n'est trouvée au-dessus du seuil, suggère de baisser le seuil
             print("      - Try lowering the similarity_threshold parameter.")
         
-        print("\n   > Gephi Export Complete!")
-        print(f"      Import '{nodes_file}' as Nodes Table")
-        print(f"      Import '{edges_file}' as Edges Table")
+        print("\n   > Gephi Export Complete!") #Message de fin
+        print(f"      Import '{nodes_file}' as Nodes Table") #Indique comment importer les fichiers dans Gephi
+        print(f"      Import '{edges_file}' as Edges Table") 
         
         return True
 
-    def export_similarity_matrix(self, output_file='similarity_matrix.xlsx'):
+    def export_similarity_matrix(self, output_file='similarity_matrix.xlsx'): #Exporte la matrice de similarité complète vers Excel
         print(f"\n10. Export Similarity Matrix")
         
         if self.cosine_sim is None:
-            self.compute_cosine_similarity()
+            self.compute_cosine_similarity() #Calcule la matrice de similarité si elle n'est pas déjà calculée
         
         # Création des labels pour les lignes et colonnes
         if 'name' in self.df.columns:
-            labels = self.df['name'].tolist()
+            labels = self.df['name'].tolist() #Utilise les noms des produits comme étiquettes
         else:
-            labels = [f"Doc_{i}" for i in range(len(self.df))]
+            labels = [f"Doc_{i}" for i in range(len(self.df))] #Utilise les indices comme étiquettes si la colonne n'existe pas
         
         # Création du DataFrame avec la matrice de similarité
         sim_df = pd.DataFrame(self.cosine_sim, index=labels, columns=labels)
         
         try:
             sim_df.to_excel(output_file)
-            print(f"   > Similarity matrix exported to: {output_file}")
+            print(f"   > Similarity matrix exported to: {output_file}") #Message de succès
         except Exception as e:
-            print(f"   > Error exporting similarity matrix: {e}")
+            print(f"   > Error exporting similarity matrix: {e}") #Message d'erreur en cas d'échec
         
         return sim_df
 
-    def export_token_frequencies(self, output_file='token_frequencies.xlsx'):
+    def export_token_frequencies(self, output_file='token_frequencies.xlsx'): #Exporte tous les tokens avec leurs fréquences dans un fichier Excel
         print(f"\n11. Export Token Frequencies")
         
         if self.df is None:
-            print("   > Error: Data not loaded. Run load_and_process() first.")
+            print("   > Error: Data not loaded. Run load_and_process() first.") #Erreur si les données ne sont pas chargées
             return None
         
         # Définir la plage de n-grammes
-        if self.ngram_type == 'trigram': n_range = (3, 3)
-        elif self.ngram_type == 'bigram': n_range = (2, 2)
-        else: n_range = (1, 1)
+        if self.ngram_type == 'trigram': n_range = (3, 3) #Choix des n-grammes utilisés pour l'analyse (trigram)
+        elif self.ngram_type == 'bigram': n_range = (2, 2) #Choix des n-grammes utilisés pour l'analyse (bigram)
+        else: n_range = (1, 1) #Choix des n-grammes utilisés pour l'analyse (unigram)
         
         # CountVectorizer pour compter toutes les occurrences (min_df=1 pour inclure tous les tokens)
         cv = CountVectorizer(ngram_range=n_range, min_df=1)
-        X = cv.fit_transform(self.df['processed_text'])
+        X = cv.fit_transform(self.df['processed_text']) #Matrice des occurrences
         
         # Calcul des fréquences totales
-        total_counts = np.asarray(X.sum(axis=0)).flatten()
-        tokens = cv.get_feature_names_out()
+        total_counts = np.asarray(X.sum(axis=0)).flatten() #Somme des colonnes pour obtenir la fréquence totale de chaque token
+        tokens = cv.get_feature_names_out() #Liste des tokens
         
         # Création du DataFrame
         freq_df = pd.DataFrame({
             'token': tokens,
             'frequency': total_counts,
             'documents_containing': np.asarray((X > 0).sum(axis=0)).flatten()  # Nombre de documents contenant le token
-        })
+        }) #Dictionnaire pour les données des tokens
         
         # Tri par fréquence décroissante
         freq_df = freq_df.sort_values(by='frequency', ascending=False).reset_index(drop=True)
         
         
         try:
-            freq_df.to_excel(output_file, index=False)
-            print(f"   > Token frequencies exported to: {output_file}")
-            print(f"   > Total unique tokens: {len(freq_df)}")
-            print(f"   > Total token instances: {freq_df['frequency'].sum()}")
+            freq_df.to_excel(output_file, index=False) #Enregistrement du fichier Excel
+            print(f"   > Token frequencies exported to: {output_file}") #Message de succès
+            print(f"   > Total unique tokens: {len(freq_df)}") #Statistiques sur les tokens (total unique, total instances)
+            print(f"   > Total token instances: {freq_df['frequency'].sum()}") 
         except Exception as e:
-            print(f"   > Error exporting token frequencies: {e}")
+            print(f"   > Error exporting token frequencies: {e}") #Message d'erreur en cas d'échec
         
         return freq_df
 
 if __name__ == "__main__":
     
     print("\nCONFIGURATION")
-    print("1. Lemmatization")
-    print("2. Stemming")
+    print("1. Lemmatization") #Choix entre lemmantisation et racinisation
+    print("2. Stemming") 
     norm_choice = input("Choice (1/2) : ").strip()
     norm_mode = 'lemmatization' if norm_choice == '1' else 'stemming'
 
-    print("\n1. Unigram")
+    print("\n1. Unigram") #Choix entre unigram, bigram et trigram
     print("2. Bigram")
     print("3. Trigram")
     ngram_choice = input("Choice (1/2/3) : ").strip()
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    miner = TextMiner('.patagonia/patagonia_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) # à remplacer
-
+    miner = TextMiner('.patagonia/patagonia_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) #à remplacer
+    #Exécution des étapes principales
     if miner.load_and_process():
         miner.show_word_frequencies()
         miner.vectorize_tfidf_manual(n_docs=5)
         miner.show_elbow_method(max_k=15)
         
         try:
-            k = int(input("\n>> Desired number of clusters (e.g., 5) : "))
+            k = int(input("\n>> Desired number of clusters (e.g., 5) : ")) #Demande le nombre de clusters à l'utilisateur
         except:
             k = 5
         
-        miner.perform_clustering(n_clusters=k)
+        miner.perform_clustering(n_clusters=k) #Exécution du clustering
         
         output_name = f".patagonia/patagonia_products_clustered_{ngram_mode}.xlsx" # à remplacer
-        miner.save_results(output_name)
+        miner.save_results(output_name) #Sauvegarde des résultats
         
-        miner.visualize_pca()
+        miner.visualize_pca() #Visualisation PCA
         
 
-        gephi_choice = input("\n>> Export data to Gephi? (y/n) : ").strip().lower()
+        gephi_choice = input("\n>> Export data to Gephi? (y/n) : ").strip().lower() #Demande si l'utilisateur veut exporter les données pour Gephi
         
-        if gephi_choice == 'y':
+        if gephi_choice == 'y': #Si oui, demande les paramètres d'exportation
             # Demande le seuil de similarité
             try:
                 threshold = float(input(">> Similarity threshold (0.0-1.0, default=0.20) : ").strip() or "0.20")
@@ -492,13 +492,13 @@ if __name__ == "__main__":
             )
             
             # Option d'export de la matrice complète de similarité
-            matrix_choice = input("\n>> Export full similarity matrix to Excel? (y/n) : ").strip().lower()
+            matrix_choice = input("\n>> Export full similarity matrix to Excel? (y/n) : ").strip().lower() #Demande si l'utilisateur veut exporter la matrice de similarité complète
             if matrix_choice == 'y':
-                matrix_file = os.path.join(output_dir, f"similarity_matrix_{ngram_mode}.xlsx")
+                matrix_file = os.path.join(output_dir, f"similarity_matrix_{ngram_mode}.xlsx") 
                 miner.export_similarity_matrix(output_file=matrix_file)
 
 
-        token_choice = input("\n>> Export all tokens with frequencies to Excel? (y/n) : ").strip().lower()
+        token_choice = input("\n>> Export all tokens with frequencies to Excel? (y/n) : ").strip().lower() #Demande si l'utilisateur veut exporter les fréquences des tokens
         
         if token_choice == 'y':
             token_output_dir = input(">> Output directory (default='.patagonia') : ").strip() or '.patagonia'
