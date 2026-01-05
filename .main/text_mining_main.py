@@ -46,7 +46,10 @@ class TextMiner:
 
         # Mots à ignorer car non pertinents : à compléter manuellement ou à l'aide de l'IA par rapport aux résultats obtenus
         noise_words = {
-            'intro', 'details', 'specs', 'features', 'materials', 'care', 'instructions', 'weight', 'country', 'origin', 'made', 'factory', 'certified','machine', 'wash', 'warm', 'cold', 'bleach', 'dry', 'tumble', 'iron','oz', 'g', 'lbs', 'premium', 'product', 'regular', 'fit', 'size', 'color', 'cool', 'intentionally', 'saying', "finish", "visit", "guide"
+            'intro', 'details', 'specs', 'features', 'materials','material', 'care', 'instructions', 'weight', 
+            'country', 'origin', 'made', 'factory', 'certified','machine', 'wash', 'warm', 'cold', 'bleach', 'dry',
+              'tumble', 'iron','oz', 'g', 'lbs', 'premium', 'product', 'regular', 'fit', 'size', 'color', 'cool', 
+              'intentionally', 'saying', "finish", "visit", "guide"
         }
         self.stop_words.update(noise_words) # Ajout des mots "bruit" à la liste des stop words
         
@@ -155,7 +158,7 @@ class TextMiner:
 
         # Exportation de la matrice TF-IDF complète sur excel
         try:
-            filename = f"tfidf_matrix_{self.ngram_type}.xlsx"
+            filename = f".ecoalf/tfidf_matrix_ecoalf_{self.ngram_type}.xlsx"
             print(f"   > Exporting full matrix to {filename}")
             
             df_tfidf = pd.DataFrame(self.tfidf_matrix, columns=self.feature_names) # Crée une table pandas à partir de la matrice TF-IDF
@@ -448,7 +451,7 @@ if __name__ == "__main__":
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    miner = TextMiner('.patagonia/patagonia_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) #à remplacer
+    miner = TextMiner('.ecoalf/ecoalf_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) #à remplacer
     #Exécution des étapes principales
     if miner.load_and_process():
         miner.show_word_frequencies()
@@ -461,8 +464,8 @@ if __name__ == "__main__":
             k = 5
         
         miner.perform_clustering(n_clusters=k) #Exécution du clustering
-        
-        output_name = f".patagonia/patagonia_products_clustered_{ngram_mode}.xlsx" # à remplacer
+
+        output_name = f".ecoalf/ecoalf_products_clustered_{ngram_mode}.xlsx" # à remplacer
         miner.save_results(output_name) #Sauvegarde des résultats
         
         miner.visualize_pca() #Visualisation PCA
@@ -482,7 +485,7 @@ if __name__ == "__main__":
             name_col = input(">> Column name for product labels (default='name') : ").strip() or 'name'
             
             # Demande le répertoire de sortie
-            output_dir = input(">> Output directory (default='.patagonia') : ").strip() or '.patagonia'
+            output_dir = input(">> Output directory (default='.ecoalf') : ").strip() or '.ecoalf'
             
             # Export vers Gephi
             miner.export_to_gephi(
@@ -501,8 +504,8 @@ if __name__ == "__main__":
         token_choice = input("\n>> Export all tokens with frequencies to Excel? (y/n) : ").strip().lower() #Demande si l'utilisateur veut exporter les fréquences des tokens
         
         if token_choice == 'y':
-            token_output_dir = input(">> Output directory (default='.patagonia') : ").strip() or '.patagonia'
-            token_file = os.path.join(token_output_dir, f"token_frequencies_patagonia_{ngram_mode}.xlsx")
+            token_output_dir = input(">> Output directory (default='.ecoalf') : ").strip() or '.ecoalf'
+            token_file = os.path.join(token_output_dir, f"token_frequencies_ecoalf_{ngram_mode}.xlsx")
             miner.export_token_frequencies(output_file=token_file)
         
         print("\nFINISHED")
