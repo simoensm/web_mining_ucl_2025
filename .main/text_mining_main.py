@@ -411,7 +411,7 @@ class TextMiner:
             freq_df.to_excel(output_file, index=False)
             print(f"   > Token frequencies exported to: {output_file}")
             print(f"   > Total unique tokens: {len(freq_df)}")
-            print(f"   > Total token instances: {freq_df['Frequency'].sum()}")
+            print(f"   > Total token instances: {freq_df['frequency'].sum()}")
         except Exception as e:
             print(f"   > Error exporting token frequencies: {e}")
         
@@ -486,7 +486,7 @@ if __name__ == "__main__":
         
         if token_choice == 'y':
             token_output_dir = input(">> Output directory (default='.patagonia') : ").strip() or '.patagonia'
-            token_file = os.path.join(token_output_dir, f"token_frequencies_{ngram_mode}.xlsx")
+            token_file = os.path.join(token_output_dir, f"token_frequencies_patagonia_{ngram_mode}.xlsx")
             miner.export_token_frequencies(output_file=token_file)
         
         print("\nFINISHED")

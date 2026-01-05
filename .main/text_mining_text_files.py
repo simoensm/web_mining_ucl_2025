@@ -70,7 +70,6 @@ class TextMinerFrequency:
         return " ".join(cleaned)
 
     def load_and_process(self):
-        """Charge le fichier entier et le nettoie en une seule fois"""
         print(f"\n1. Loading & Pre-Process ({self.normalization.upper()})") 
         try:
             with open(self.file_path, 'r', encoding='utf-8') as f:
@@ -90,7 +89,6 @@ class TextMinerFrequency:
         return True
 
     def export_token_frequencies(self, output_file='token_frequencies.xlsx'):
-        """Compte les fréquences et exporte vers Excel (Token, Frequency)"""
         print(f"\n2. Calculation & Export Token Frequencies")
         
         if self.full_cleaned_text is None:
@@ -159,5 +157,5 @@ if __name__ == "__main__":
     )
 
     if miner.load_and_process():
-        output_filename = f"frequencies_{ngram_mode}.xlsx"
+        output_filename = f"report_frequencies_patagonia_{ngram_mode}.xlsx"
         miner.export_token_frequencies(output_file=output_filename)
