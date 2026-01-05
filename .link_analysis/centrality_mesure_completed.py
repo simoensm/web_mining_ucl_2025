@@ -1,4 +1,6 @@
+from turtle import pd
 import numpy as np
+import pandas as pd
 from shortest_path_completed import shortest_path_matrix
 
 def closeness_centrality(A: np.ndarray) -> np.ndarray:
@@ -9,22 +11,15 @@ def closeness_centrality(A: np.ndarray) -> np.ndarray:
     """
     SP = shortest_path_matrix(A)
     n = A.shape[0]
-    closeness = np.zeros(n)
+    CC = np.zeros(n)
 
     for i in range(n):
-        dists = SP[i, :]
+        dist_sum = SP[i, :].sum()
         # On ne prend en compte que les distances réelles (inférieures au seuil arbitraire de ShortestPathMatrix)
         # et strictement positives (on exclut la distance à soi-même)
-        valid_dists = dists[dists < 90000] 
-        
-        total_dist = np.sum(valid_dists)
-        
-        if total_dist > 0:
-            closeness[i] = (n - 1) / total_dist
-        else:
-            closeness[i] = 0.0
+        CC[i] = (n-1)/dist_sum
             
-    return closeness
+    return CC
 
 def residual_closeness_centrality(A: np.ndarray) -> np.ndarray:
     """
@@ -43,19 +38,17 @@ def residual_closeness_centrality(A: np.ndarray) -> np.ndarray:
         A_sub = np.delete(np.delete(A, k, axis=0), k, axis=1)
         
         # 2. Recalculer les plus courts chemins sur ce sous-graphe
-        SP_sub = shortest_path_matrix(A_sub)
+        SP = shortest_path_matrix(A_sub)
         
         # 3. Calculer le score
-        score = 0.0
-        n_sub = SP_sub.shape[0]
+        n_sub = SP.shape[0]
         
         for i in range(n_sub):
             for j in range(n_sub):
                 if i != j:
-                    dist = SP_sub[i, j]
+                    dist = SP[i, j]
                     # On ignore les distances "infinies" (100000 dans ShortestPathMatrix)
-                    if dist < 90000:
-                        score += 1.0 / (2.0 ** dist)
+                    score += 1.0 / (2.0 ** dist)
                         
         rcc[k] = score
         
@@ -75,7 +68,7 @@ def eccentricity_centrality(A: np.ndarray) -> np.ndarray:
     ecc = np.zeros(n)
     
     for i in range(n):
-        row_dists = SP[i, :]
+        dists = SP[i, :]
         
         # On cherche la distance max.
         # Attention : si le graphe n'est pas connexe, ShortestPathMatrix met 100000.
@@ -85,15 +78,9 @@ def eccentricity_centrality(A: np.ndarray) -> np.ndarray:
         # Cependant, pour un graphe connexe, on filtre souvent la diagonale (0).
         # Mais le max d'une ligne contenant des nombres positifs sera > 0 de toute façon.
         
-        max_dist = np.max(row_dists)
-        
-        if max_dist > 0:
-            ecc[i] = 1.0 / max_dist
-        else:
-            # Cas théorique d'un nœud isolé avec lui-même seulement (dist 0)
-            ecc[i] = 0.0 
-            
-    return ecc
+        ecc [i] = dists.max()
+
+    return 1.0 / ecc
 
 
 def graph_radius(A: np.ndarray) -> float:
@@ -103,26 +90,15 @@ def graph_radius(A: np.ndarray) -> float:
     The radius is computed as the minimum of the inverted
     eccentricity values.
     """
-    ecc_values = eccentricity_centrality(A)
-    
-    # On filtre les zéros si nécessaire, mais la consigne est simple : min_i
-    if len(ecc_values) > 0:
-        return np.min(ecc_values)
-    return 0.0
+    ecc = 1 / eccentricity_centrality(A)
+    return ecc.min()
 
 if __name__ == "__main__":
-    A = np.array([
-        [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-        [1, 0, 1, 1, 0, 0, 1, 0, 0, 0],
-        [1, 1, 0, 1, 1, 0, 1, 0, 0, 0],
-        [1, 1, 1, 0, 1, 0, 0, 0, 0, 0],
-        [1, 0, 1, 1, 0, 0, 1, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-        [0, 1, 1, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-        [0, 0, 0, 0, 1, 1, 0, 1, 0, 1],
-        [0, 0, 0, 0, 0, 1, 0, 1, 1, 0]
-    ], int)
+
+    nom_fichier = '.patagonia/similarity_matrix_unigram.xlsx'
+    df = pd.read_excel(nom_fichier, index_col=0, engine='openpyxl')
+    A = df.values
+    print(A)
     
     A_RC = np.array([[0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
     [1, 0, 1, 1, 0, 0, 1, 0, 0, 0],
