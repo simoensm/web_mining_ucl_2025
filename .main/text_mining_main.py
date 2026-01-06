@@ -451,7 +451,7 @@ if __name__ == "__main__":
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    miner = TextMiner('.ecoalf/ecoalf_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) #à remplacer
+    miner = TextMiner('.patagonia/patagonia_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) #à remplacer
     #Exécution des étapes principales
     if miner.load_and_process():
         miner.show_word_frequencies()
@@ -465,7 +465,7 @@ if __name__ == "__main__":
         
         miner.perform_clustering(n_clusters=k) #Exécution du clustering
 
-        output_name = f".ecoalf/ecoalf_products_clustered_{ngram_mode}.xlsx" # à remplacer
+        output_name = f".patagonia/patagonia_products_clustered_{ngram_mode}.xlsx" # à remplacer
         miner.save_results(output_name) #Sauvegarde des résultats
         
         miner.visualize_pca() #Visualisation PCA
