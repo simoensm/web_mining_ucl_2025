@@ -1,10 +1,18 @@
 import numpy as np
 import pandas as pd
 
+Treshold = 0.20 #à remplacer avec text_mining_main car sinon resultat non identiques sur gephi et ici
 # Chargement des données
 nom_fichier = '.patagonia/similarity_matrix_unigram.xlsx'
 df = pd.read_excel(nom_fichier, index_col=0, engine='openpyxl')
-A = df.values
+S = df.values
+
+A = (S > Treshold).astype(int)
+
+np.fill_diagonal(A, 0)
+
+print(S)
+print(A)
 
 def degree_matrix(A: np.ndarray, direction: str = "out") -> np.ndarray:
     if direction == "out":
@@ -90,7 +98,7 @@ def betweenness_centrality(A: np.ndarray) -> np.ndarray:
                 dist[i, j] = 0
                 sigma[i, j] = 1
             elif A[i, j] != 0:
-                dist[i, j] = 1.0 #/A[i, j] si version pondérée
+                dist[i, j] = 1.0 #si version pondérée /A[i, j]
                 sigma[i, j] = 1
 
     # Floyd-Warshall augmenté
@@ -121,17 +129,17 @@ def betweenness_centrality(A: np.ndarray) -> np.ndarray:
 
 if __name__ == "__main__":
 
-    threshold = 0.20 # à remplacer avec text_mining_main car sinon resultat non identiques sur gephi et ici
+    
 
-    A_filtered = A.copy()
+    #A_filtered = A.copy()
 
-    np.fill_diagonal(A_filtered, 0)
+    #np.fill_diagonal(A_filtered, 0)
 
-    A_filtered[A_filtered <= threshold] = 0
+    #A_filtered[A_filtered <= threshold] = 0
 
     print("Degree Centrality :")
     D_out = degree_matrix(A, "out") 
-    degree_centrality_out = np.count_nonzero(A_filtered, axis=1)
+    degree_centrality_out = np.count_nonzero(A, axis=1)
     moyenne = np.mean(degree_centrality_out)
     
     degree_series = pd.Series(degree_centrality_out, index=df.index)
@@ -143,8 +151,8 @@ if __name__ == "__main__":
 
 
     print("\nShortest Path :")
-    """# On récupère à la fois les distances (SP) et les successeurs (Next)
-    SP_matrix, Next_matrix = shortest_path_with_reconstruction(A_filtered)
+    # On récupère à la fois les distances (SP) et les successeurs (Next)
+    SP_matrix, Next_matrix = shortest_path_with_reconstruction(A)
 
     # Définition des produits
     p1 = "Women's Long-Sleeved Rugby Top" 
@@ -168,12 +176,12 @@ if __name__ == "__main__":
         print("Pas de chemin possible ")
     else:
         print(f"Distance  : {dist_val}")
-        print("Etapes    : " + " -> ".join(path_list))"""
+        print("Etapes    : " + " -> ".join(path_list))
 
 
 
     print("\nBetweenness Centrality :")
-    bc_values = betweenness_centrality(A_filtered)
+    bc_values = betweenness_centrality(A)
     bc_series = pd.Series(bc_values, index=df.index)
     print("Top 10 Betweenness Centrality :")
     print(bc_series.sort_values(ascending=False).head(10))

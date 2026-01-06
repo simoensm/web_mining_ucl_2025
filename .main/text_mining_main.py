@@ -373,7 +373,7 @@ class TextMiner:
         return True
 
     def export_similarity_matrix(self, output_file='similarity_matrix.xlsx'): #Exporte la matrice de similarité complète vers Excel
-        print(f"\n10. Export Similarity Matrix")
+        print(f"\n10a. Export Similarity Matrix")
         
         if self.cosine_sim is None:
             self.compute_cosine_similarity() #Calcule la matrice de similarité si elle n'est pas déjà calculée
@@ -500,6 +500,10 @@ if __name__ == "__main__":
                 matrix_file = os.path.join(output_dir, f"similarity_matrix_{ngram_mode}.xlsx") 
                 miner.export_similarity_matrix(output_file=matrix_file)
 
+            export_distance_matrix = input("\n>> Export full distance matrix to Excel? (y/n) : ").strip().lower() #Demande si l'utilisateur veut exporter la matrice de distance complète
+            if export_distance_matrix == 'y':
+                distance_file = os.path.join(output_dir, f"distance_matrix_{ngram_mode}.xlsx")
+                miner.export_distance_matrix(output_file=distance_file)
 
         token_choice = input("\n>> Export all tokens with frequencies to Excel? (y/n) : ").strip().lower() #Demande si l'utilisateur veut exporter les fréquences des tokens
         
