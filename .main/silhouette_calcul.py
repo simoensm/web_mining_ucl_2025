@@ -25,7 +25,7 @@ class TextMiner:
         self.ngram_type = ngram_type
         self.normalization = normalization
         
-        # Choix de l'outil de normalisation 🛠️
+        # Choix de l'outil de normalisation
         if self.normalization == 'stemming':
             self.stemmer = PorterStemmer()
         else:
@@ -56,11 +56,11 @@ class TextMiner:
         return " ".join(cleaned)
 
     def load_and_prepare(self):
-        # Lecture du fichier Excel 📂
+        # Lecture du fichier Excel
         self.df = pd.read_excel(self.file_path).dropna(subset=[self.column_name]).reset_index(drop=True)
         self.df['processed_text'] = self.df[self.column_name].apply(self.preprocess)
         
-        # Configuration des N-grammes 🖇️
+        # Configuration des N-grammes
         n_range = (1, 1)
         if self.ngram_type == 'bigram': n_range = (2, 2)
         elif self.ngram_type == 'trigram': n_range = (3, 3)
@@ -69,7 +69,7 @@ class TextMiner:
         raw_counts = cv.fit_transform(self.df['processed_text']).toarray()
         self.feature_names = cv.get_feature_names_out()
 
-        # Calcul TF-IDF 🧮
+        # Calcul TF-IDF 
         max_counts_per_doc = raw_counts.max(axis=1)
         max_counts_per_doc[max_counts_per_doc == 0] = 1 
         tf = raw_counts / max_counts_per_doc[:, np.newaxis]
@@ -81,22 +81,22 @@ class TextMiner:
         self.tfidf_matrix = normalize(tf * idf, norm='l2', axis=1)
         print(f">> Prétraitement terminé ({len(self.df)} lignes).")
 
-# --- LOGIQUE DE TEST AUTOMATISÉ ---
+
 if __name__ == "__main__":
-    # Chemin vers ton fichier (à adapter si besoin)
-    path = ".patagonia/patagonia_dataset.xlsx" 
+    # Chemin vers le fichier 
+    path = ".ecoalf/ecoalf_dataset.xlsx" 
     
-    # 1. Menu interactif pour la normalisation 🧠
+    # 1. Menu interactif pour la normalisation 
     print("Choisissez la méthode de normalisation :")
-    print("1. Lemmatisation (Précis, conserve le sens)")
-    print("2. Racinisation / Stemming (Plus agressif)")
+    print("1. Lemmatisation")
+    print("2. Racinisation")
     choix_norm = input(">> ")
     methode = 'lemmatization' if choix_norm == '1' else 'stemming'
     
-    # 2. Menu interactif pour les N-grammes 🖇️
+    # 2. Menu interactif pour les N-grammes
     print("\nChoisissez le type de N-gramme :")
-    print("1. Unigramme (Mots isolés)")
-    print("2. Bigramme (Paires de mots)")
+    print("1. Unigramme ")
+    print("2. Bigramme ")
     choix_ng = input(">> ")
     type_ng = 'unigram' if choix_ng == '1' else 'bigram'
 
@@ -108,16 +108,14 @@ if __name__ == "__main__":
     print(f"{'K':<5} | {'Silhouette Score':<18} | {'Inertia':<10}")
     print("-" * 40)
 
-    # Boucle automatique de 2 à 14 🔄
-    for k in range(2, 26):
+    for k in range(2, 15):
         km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
         labels = km.fit_predict(miner.tfidf_matrix)
         
-        # Calcul de la qualité du clustering 📊
-        # $s = \frac{b - a}{\max(a, b)}$
+        # Calcul de la qualité du clustering
         score = silhouette_score(miner.tfidf_matrix, labels)
         inertia = km.inertia_
         
         print(f"{k:<5} | {score:<18.4f} | {inertia:<10.2f}")
 
-    print("\n>> Test terminé. Regarde quel k offre le meilleur score de silhouette !")
+    print("\n>> Test terminé !")
