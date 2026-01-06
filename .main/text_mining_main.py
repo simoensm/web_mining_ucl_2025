@@ -158,7 +158,7 @@ class TextMiner:
 
         # Exportation de la matrice TF-IDF complète sur excel
         try:
-            filename = f".ecoalf/tfidf_matrix_ecoalf_{self.ngram_type}.xlsx"
+            filename = f".patagonia/tfidf_matrix_patagonia_{self.ngram_type}.xlsx"
             print(f"   > Exporting full matrix to {filename}")
             
             df_tfidf = pd.DataFrame(self.tfidf_matrix, columns=self.feature_names) # Crée une table pandas à partir de la matrice TF-IDF
@@ -451,7 +451,7 @@ if __name__ == "__main__":
     ngram_map = {'1': 'unigram', '2': 'bigram', '3': 'trigram'}
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
-    miner = TextMiner('.ecoalf/ecoalf_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) #à remplacer
+    miner = TextMiner('.patagonia/patagonia_dataset.xlsx', ngram_type=ngram_mode, normalization=norm_mode) #à remplacer
     #Exécution des étapes principales
     if miner.load_and_process():
         miner.show_word_frequencies()
@@ -465,7 +465,7 @@ if __name__ == "__main__":
         
         miner.perform_clustering(n_clusters=k) #Exécution du clustering
 
-        output_name = f".ecoalf/ecoalf_products_clustered_{ngram_mode}.xlsx" # à remplacer
+        output_name = f".patagonia/patagonia_products_clustered_{ngram_mode}.xlsx" # à remplacer
         miner.save_results(output_name) #Sauvegarde des résultats
         
         miner.visualize_pca() #Visualisation PCA
@@ -485,7 +485,7 @@ if __name__ == "__main__":
             name_col = input(">> Column name for product labels (default='name') : ").strip() or 'name'
             
             # Demande le répertoire de sortie
-            output_dir = input(">> Output directory (default='.ecoalf') : ").strip() or '.ecoalf'
+            output_dir = input(">> Output directory (default='.patagonia') : ").strip() or '.patagonia'
             
             # Export vers Gephi
             miner.export_to_gephi(
@@ -504,8 +504,8 @@ if __name__ == "__main__":
         token_choice = input("\n>> Export all tokens with frequencies to Excel? (y/n) : ").strip().lower() #Demande si l'utilisateur veut exporter les fréquences des tokens
         
         if token_choice == 'y':
-            token_output_dir = input(">> Output directory (default='.ecoalf') : ").strip() or '.ecoalf'
-            token_file = os.path.join(token_output_dir, f"token_frequencies_ecoalf_{ngram_mode}.xlsx")
+            token_output_dir = input(">> Output directory (default='.patagonia') : ").strip() or '.patagonia'
+            token_file = os.path.join(token_output_dir, f"token_frequencies_patagonia_{ngram_mode}.xlsx")
             miner.export_token_frequencies(output_file=token_file)
         
         print("\nFINISHED")
