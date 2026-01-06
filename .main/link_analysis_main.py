@@ -95,7 +95,7 @@ def betweenness_centrality(A: np.ndarray) -> np.ndarray:
                 dist[i, j] = 0
                 sigma[i, j] = 1
             elif A[i, j] != 0:
-                dist[i, j] = 1.0 #si version pondérée /A[i, j]
+                dist[i, j] = 1.0/A[i, j]
                 sigma[i, j] = 1
 
     # Floyd-Warshall augmenté
