@@ -90,7 +90,7 @@ def betweenness_centrality(A: np.ndarray) -> np.ndarray:
                 dist[i, j] = 0
                 sigma[i, j] = 1
             elif A[i, j] != 0:
-                dist[i, j] = A[i, j]
+                dist[i, j] = 1.0 #/A[i, j] si version pondérée
                 sigma[i, j] = 1
 
     # Floyd-Warshall augmenté
@@ -117,12 +117,11 @@ def betweenness_centrality(A: np.ndarray) -> np.ndarray:
     if n > 2:
         norm = 1 / ((n - 1) * (n - 2))
         cb *= norm
-        
     return cb
 
 if __name__ == "__main__":
 
-    threshold = 0.20
+    threshold = 0.20 # à remplacer avec text_mining_main car sinon resultat non identiques sur gephi et ici
 
     A_filtered = A.copy()
 
@@ -144,9 +143,8 @@ if __name__ == "__main__":
 
 
     print("\nShortest Path :")
-    # On récupère à la fois les distances (SP) et les successeurs (Next)
+    """# On récupère à la fois les distances (SP) et les successeurs (Next)
     SP_matrix, Next_matrix = shortest_path_with_reconstruction(A_filtered)
-    print("Matrices calculées.")
 
     # Définition des produits
     p1 = "Women's Long-Sleeved Rugby Top" 
@@ -170,7 +168,7 @@ if __name__ == "__main__":
         print("Pas de chemin possible ")
     else:
         print(f"Distance  : {dist_val}")
-        print("Etapes    : " + " -> ".join(path_list))
+        print("Etapes    : " + " -> ".join(path_list))"""
 
 
 
