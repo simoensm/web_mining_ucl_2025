@@ -83,9 +83,6 @@ def get_path_names(start_name: str, end_name: str, df_index, Next_matrix: np.nda
     return path_names
 
 def betweenness_centrality(A: np.ndarray) -> np.ndarray:
-    """
-    Calcule la Betweenness Centrality pour chaque nœud.
-    """
     n = A.shape[0]
     
     dist = np.full((n, n), np.inf)
@@ -121,10 +118,9 @@ def betweenness_centrality(A: np.ndarray) -> np.ndarray:
                         if dist[i, k] + dist[k, j] == dist[i, j]:
                             cb[k] += (sigma[i, k] * sigma[k, j]) / sigma[i, j]
     
-    # Normalisation
-    if n > 2:
-        norm = 1 / ((n - 1) * (n - 2))
-        cb *= norm
+    
+    cb /= 2.0
+
     return cb
 
 if __name__ == "__main__":
@@ -183,5 +179,4 @@ if __name__ == "__main__":
     print("\nBetweenness Centrality :")
     bc_values = betweenness_centrality(A)
     bc_series = pd.Series(bc_values, index=df.index)
-    print("Top 10 Betweenness Centrality :")
     print(bc_series.sort_values(ascending=False).head(10))
