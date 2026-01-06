@@ -36,7 +36,7 @@ class TextMinerFrequency:
 
         # Mots à ignorer (bruit)
         noise_words = {
-            'intro', 'details', 'specs', 'features', 'materials', 'care', 'instructions',
+            'intro', 'details', 'specs', 'features', 'materials','material', 'care', 'instructions',
             'weight', 'country', 'origin', 'made', 'factory', 'certified',
             'machine', 'wash', 'warm', 'cold', 'bleach', 'dry', 'tumble', 'iron',
             'oz', 'g', 'lbs', 'premium', 'product', 'regular', 'fit', 'size', 'color',
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     ngram_mode = ngram_map.get(ngram_choice, 'unigram')
 
     # 2. Exécution
-    file_to_analyze = '.patagonia/patagonia-progress-report-2025.txt' # À MODIFIER
+    file_to_analyze = '.armedangels/report_armedangels_2021.txt' # À MODIFIER
 
     miner = TextMinerFrequency(
         file_to_analyze, 
@@ -157,5 +157,5 @@ if __name__ == "__main__":
     ) 
 
     if miner.load_and_process(): # Si le chargement et le traitement sont réussis
-        output_filename = f".patagonia/report_frequencies_patagonia_{ngram_mode}.xlsx" # Nom du fichier de sortie
+        output_filename = f".armedangels/report_frequencies_armedangels_{ngram_mode}.xlsx" # Nom du fichier de sortie
         miner.export_token_frequencies(output_file=output_filename) 
