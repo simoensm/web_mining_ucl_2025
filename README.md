@@ -2,7 +2,7 @@
 Study of the promotion of sustainable products in committed e-commerce stores
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
-![Status](https://img.shields.io/badge/Status-In_Progress-yellow)
+![Status](https://img.shields.io/badge/Status-Completed-yellow)
 ![Course](https://img.shields.io/badge/Course-Web_Mining-orange)
 
 **Course:** Web Mining (MLSMM2153)  
