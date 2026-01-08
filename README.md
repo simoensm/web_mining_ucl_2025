@@ -1,4 +1,4 @@
-#Web Mining UCLouvain FUCaM Mons 2025-2026
+# Web Mining UCLouvain FUCaM Mons 2025-2026
 Study of the promotion of sustainable products in committed e-commerce stores
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
