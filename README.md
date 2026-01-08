@@ -23,7 +23,7 @@ https://github.com/simoensm/web_mining_ucl_2025
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
 - [Project Overview](#project-overview)
 - [Project Theme](#project-theme)
