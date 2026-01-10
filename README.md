@@ -144,53 +144,36 @@ Graph visualization is performed using **Gephi**.
 ```text
 web_mining_ucl_2025/
 │
-├── scraping/
-│   ├── patagonia/
+├── scraping
+│   ├── .patagonia/
 │   │   ├── patagonia_links_men.py
 │   │   ├── patagonia_links_women.py
 │   │   ├── patagonia_scraper.py
 │   │   └── patagonia_reports.py
 │   │
-│   ├── ecoalf/
+│   ├── .ecoalf/
 │   │   ├── ecoalf_links_men.py
 │   │   ├── ecoalf_links_women.py
 │   │   └── ecoalf_scraper.py
 │   │
-│   └── armedangels/
+│   └── .armedangels/
 │       ├── armedangels_links_men.py
 │       ├── armedangels_links_women.py
 │       └── armedangels_scraper.py
 │
-├── data/
-│   ├── raw/
-│   ├── cleaned/
-│   ├── datasets/
-│   └── esg_reports/
-│
-├── text_mining/
-│   ├── preprocessing.py
-│   ├── tfidf_vectorizer.py
-│   ├── clustering_main.py
+├── main
 │   ├── text_mining_main.py
-│   └── dictionaries/
-│       ├── esg_dictionary.xlsx
-│       ├── materials_dictionary.xlsx
-│       └── technical_dictionary.xlsx
-│
-├── link_analysis/
-│   ├── export_to_gephi.py
-│   └── link_analysis_main.py
-│
-├── outputs/
-│   ├── figures/
-│   ├── wordclouds/
-│   ├── graphs/
-│   └── statistics/
-│
-├── report/
-│   └── rapport_MLSMM2153_group_6.pdf
-│
-└── README.md
+│   ├── text_mining_report.py
+│   ├── text_mining_voc.py
+│   ├── link_analysis_main.py
+│   └── others/
+│       ├── corpus_cleaning.py
+│       ├── excel_compil.py
+        ├── volume_scrapping.py
+        ├── word_freq_comparison.py
+        └── silhouette_calcul.py
+rapport_MLSMM2153_group_6.pdf
+EADME.md
 ```
 
 ---
