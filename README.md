@@ -18,7 +18,7 @@
 - Corentin Vande Kerckhove  
 - Sylvain Courtain  
 
-🔗 **GitHub repository:**  
+**GitHub repository:**  
 https://github.com/simoensm/web_mining_ucl_2025  
 
 ---
