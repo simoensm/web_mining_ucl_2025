@@ -208,13 +208,14 @@ python link_analysis/link_analysis_main.py
 
 | Script | Purpose |
 |------|--------|
-| `*_links_*.py` | Collect product URLs |
-| `*_scraper.py` | Extract product descriptions |
-| `preprocessing.py` | Text cleaning |
-| `tfidf_vectorizer.py` | TF-IDF matrices |
-| `clustering_main.py` | k-Means clustering |
-| `export_to_gephi.py` | Graph export |
+| `*links_*.py` | Collect product URLs |
+| `*products_.py` | Extract product descriptions |
+| `corpus_cleaning.py` | Text cleaning |
+| `text_mining_main.py` | Text Mining on product descriptions |
+| `text_mining_voc.py` | Supervised Classification based on product descriptions |
+| `text_mining_report.py` | Text Mining on ESG reports |
 | `link_analysis_main.py` | Network metrics |
+| `excel_compil.py` | Excel Compilation |
 
 ---
 
@@ -223,15 +224,6 @@ python link_analysis/link_analysis_main.py
 - Three distinct sustainability communication strategies identified
 - ESG-product alignment varies strongly across brands
 - Semantic similarity graphs reveal central and bridge products
-
----
-
-## Roadmap & Future Work
-
-- Topic modeling (LDA / BERTopic)
-- Transformer-based embeddings (SBERT)
-- Recommendation system prototype
-- Consumer perception analysis
 
 ---
 
